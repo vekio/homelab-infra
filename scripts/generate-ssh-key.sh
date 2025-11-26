@@ -40,8 +40,8 @@ if [[ ! -f "$SSH_CONFIG" ]]; then
   touch "$SSH_CONFIG"
 fi
 chmod 600 "$SSH_CONFIG"
-CONFIG_ENTRY=$(cat <<EOF
 
+CONFIG_ENTRY=$(cat <<EOF
 Host ${DEST_HOST} ${DEST_DOMAIN} ${DEST_IP}
     HostName ${DEST_IP}
     User ${DEST_USER}
@@ -50,6 +50,8 @@ Host ${DEST_HOST} ${DEST_DOMAIN} ${DEST_IP}
 
 EOF
 )
+
+printf '%s\n' "${CONFIG_ENTRY}" >> "$SSH_CONFIG"
 
 echo
 gum style --foreground 212 "Key generated:"
@@ -61,9 +63,9 @@ echo "${CONFIG_ENTRY}"
 
 # ---- Optional copy SSH key to remote server ----
 if gum confirm "Copy the public key to server ${DEST_HOST} as ${DEST_USER}?"; then
-    ssh-copy-id -i "${KEY_PATH}.pub" "${DEST_USER}@${DEST_HOST}"
-    gum style --foreground 212 "Key installed successfully on ${DEST_USER}@${DEST_HOST}"
+    ssh-copy-id -i "${KEY_PATH}.pub" "${DEST_USER}@${DEST_IP}"
+    gum style --foreground 212 "Key installed successfully on ${DEST_USER}@${DEST_IP}"
 else
     gum style --foreground 214 "You can copy it later with:"
-    echo "ssh-copy-id -i ${KEY_PATH}.pub ${DEST_USER}@${DEST_HOST}"
+    echo "ssh-copy-id -i ${KEY_PATH}.pub ${DEST_USER}@${DEST_IP}"
 fi
