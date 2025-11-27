@@ -9,4 +9,5 @@ module "local_environment" {
   titan_ip   = var.titan_ip
   calisto_ip = var.calisto_ip
   atlas_ip   = var.atlas_ip
+  iapetus_ip = var.iapetus_ip
 }

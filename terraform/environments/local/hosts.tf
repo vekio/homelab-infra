@@ -16,6 +16,10 @@ locals {
       domain = "atlas.${local.internal_domain}"
       answer = var.atlas_ip
     }
+    iapetus = {
+      domain = "iapetus.${local.internal_domain}"
+      answer = var.iapetus_ip
+    }
   }
 }
 

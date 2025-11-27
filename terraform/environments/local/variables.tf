@@ -32,3 +32,8 @@ variable "atlas_ip" {
   type        = string
   description = "IP address for the atlas host"
 }
+
+variable "iapetus_ip" {
+  type        = string
+  description = "IP address for the iapetus host"
+}

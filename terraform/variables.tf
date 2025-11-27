@@ -52,6 +52,11 @@ variable "atlas_ip" {
   type        = string
 }
 
+variable "iapetus_ip" {
+  description = "IP address of the iapetus server"
+  type        = string
+}
+
 variable "services" {
   description = "List of service names exposed through the proxy"
   type        = list(string)
