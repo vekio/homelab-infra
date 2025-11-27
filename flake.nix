@@ -17,7 +17,7 @@
         devShells.default = pkgs.mkShell {
           name = "homelab-infra";
 
-          packages = with pkgs; [ ansible terraform ];
+          packages = with pkgs; [ ansible ansible-lint terraform ];
         };
       });
 }
