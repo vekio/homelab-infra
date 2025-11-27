@@ -1,0 +1,72 @@
+---
+- name: Harden SSH access
+  hosts: "{{ ssh_targets | default('docker_hosts') }}"
+  become: true
+  vars:
+    homelab_templates_dir: "{{ (playbook_dir + '/../templates') | realpath }}"
+    ssh_port: 22
+    ssh_allowed_users: []
+    ssh_allowed_groups: []
+    ssh_banner_text: ""
+    ssh_banner_template: "{{ homelab_templates_dir }}/homelab_banner.txt.j2"
+    ssh_hardening_template: "{{ homelab_templates_dir }}/ssh_hardening.conf.j2"
+    ssh_banner_path: /etc/ssh/sshd_banner
+    ssh_allow_agent_forwarding: false
+    ssh_allow_tcp_forwarding: false
+    ssh_service_name: "{{ 'ssh' if ansible_os_family == 'Debian' else 'sshd' }}"
+
+  tasks:
+    - name: Ensure OpenSSH server is installed
+      ansible.builtin.apt:
+        name: openssh-server
+        state: present
+        update_cache: true
+
+    - name: Ensure sshd config directory exists
+      ansible.builtin.file:
+        path: /etc/ssh/sshd_config.d
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Deploy custom SSH banner text
+      ansible.builtin.copy:
+        dest: "{{ ssh_banner_path }}"
+        content: "{{ ssh_banner_text }}"
+        owner: root
+        group: root
+        mode: "0644"
+      when: ssh_banner_text | length > 0
+      notify: Restart SSH
+
+    - name: Deploy default SSH banner template
+      ansible.builtin.template:
+        src: "{{ ssh_banner_template }}"
+        dest: "{{ ssh_banner_path }}"
+        owner: root
+        group: root
+        mode: "0644"
+      when: ssh_banner_text | length == 0
+      notify: Restart SSH
+
+    - name: Configure SSH hardening snippet
+      ansible.builtin.template:
+        src: "{{ ssh_hardening_template }}"
+        dest: /etc/ssh/sshd_config.d/99-homelab-hardening.conf
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart SSH
+
+    - name: Ensure SSH service is enabled
+      ansible.builtin.service:
+        name: "{{ ssh_service_name }}"
+        enabled: true
+        state: started
+
+  handlers:
+    - name: Restart SSH
+      ansible.builtin.service:
+        name: "{{ ssh_service_name }}"
+        state: restarted

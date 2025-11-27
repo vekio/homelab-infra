@@ -1,0 +1,39 @@
+---
+- name: Configure passwordless sudo for homelab users
+  hosts: "{{ sudo_targets | default('docker_hosts') }}"
+  become: true
+  vars:
+    sudo_sudoers_user: ""
+    sudoers_file_path: "/etc/sudoers.d/{{ sudo_sudoers_user }}"
+    homelab_templates_dir: "{{ (playbook_dir + '/../templates') | realpath }}"
+
+  pre_tasks:
+    - name: Ensure sudo_sudoers_user is provided
+      ansible.builtin.fail:
+        msg: "You must provide sudo_sudoers_user (e.g., -e \"sudo_sudoers_user=homelab\")."
+      when: sudo_sudoers_user | length == 0
+
+  tasks:
+    - name: Ensure sudo package is present
+      ansible.builtin.apt:
+        name: sudo
+        state: present
+        update_cache: true
+
+    - name: Deploy sudoers drop-in for user
+      ansible.builtin.template:
+        src: "{{ homelab_templates_dir }}/sudoers_user.j2"
+        dest: "{{ sudoers_file_path }}"
+        owner: root
+        group: root
+        mode: "0440"
+
+    - name: Validate sudoers syntax
+      ansible.builtin.command: "visudo -cf {{ sudoers_file_path }}"
+      register: visudo_check
+      changed_when: false
+
+    - name: Fail if sudoers validation failed
+      ansible.builtin.fail:
+        msg: "visudo check failed: {{ visudo_check.stderr }}"
+      when: visudo_check.rc != 0
