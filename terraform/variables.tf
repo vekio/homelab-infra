@@ -57,6 +57,11 @@ variable "iapetus_ip" {
   type        = string
 }
 
+variable "janus_ip" {
+  description = "IP address of the janus server"
+  type        = string
+}
+
 variable "services" {
   description = "List of service names exposed through the proxy"
   type        = list(string)

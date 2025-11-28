@@ -10,4 +10,5 @@ module "local_environment" {
   calisto_ip = var.calisto_ip
   atlas_ip   = var.atlas_ip
   iapetus_ip = var.iapetus_ip
+  janus_ip   = var.janus_ip
 }

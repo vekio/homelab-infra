@@ -20,6 +20,10 @@ locals {
       domain = "iapetus.${local.internal_domain}"
       answer = var.iapetus_ip
     }
+    janus = {
+      domain = "janus.${local.internal_domain}"
+      answer = var.janus_ip
+    }
   }
 }
 
