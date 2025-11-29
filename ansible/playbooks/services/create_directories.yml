@@ -15,13 +15,13 @@
             | list
           }}
 
-    - name: Ensure compose directories exist
-      when: host_services | length > 0
-      ansible.builtin.include_tasks: tasks/ensure_compose_dir.yml
-      loop: "{{ host_services }}"
-      loop_control:
-        loop_var: svc
-        label: "{{ svc.key }}"
+    # - name: Ensure compose directories exist
+    #   when: host_services | length > 0
+    #   ansible.builtin.include_tasks: tasks/ensure_compose_dir.yml
+    #   loop: "{{ host_services }}"
+    #   loop_control:
+    #     loop_var: svc
+    #     label: "{{ svc.key }}"
 
     - name: Ensure appdata directories exist
       when: host_services | length > 0
