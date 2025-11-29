@@ -9,6 +9,12 @@ variable "proxy_host" {
   type        = string
 }
 
+variable "internal_domain" {
+  description = "Internal domain used for host records"
+  type        = string
+  default     = "home.local"
+}
+
 ### AdGuard provider configuration ###
 variable "adguard_host" {
   description = "Address of your AdGuard Home server"
@@ -32,34 +38,12 @@ variable "adguard_scheme" {
 }
 
 ### DNS records ###
-variable "oberon_ip" {
-  description = "IP address of the oberon server"
-  type        = string
-}
-
-variable "titan_ip" {
-  description = "IP address of the titan server"
-  type        = string
-}
-
-variable "calisto_ip" {
-  description = "IP address of the calisto server"
-  type        = string
-}
-
-variable "atlas_ip" {
-  description = "IP address of the atlas server"
-  type        = string
-}
-
-variable "iapetus_ip" {
-  description = "IP address of the iapetus server"
-  type        = string
-}
-
-variable "janus_ip" {
-  description = "IP address of the janus server"
-  type        = string
+variable "hosts" {
+  description = "List of homelab hosts and their IPs"
+  type = list(object({
+    name = string
+    ip   = string
+  }))
 }
 
 variable "services" {

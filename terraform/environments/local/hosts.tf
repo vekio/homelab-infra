@@ -1,28 +1,9 @@
 locals {
   host_records = {
-    oberon = {
-      domain = "oberon.${local.internal_domain}"
-      answer = var.oberon_ip
-    }
-    titan = {
-      domain = "titan.${local.internal_domain}"
-      answer = var.titan_ip
-    }
-    calisto = {
-      domain = "calisto.${local.internal_domain}"
-      answer = var.calisto_ip
-    }
-    atlas = {
-      domain = "atlas.${local.internal_domain}"
-      answer = var.atlas_ip
-    }
-    iapetus = {
-      domain = "iapetus.${local.internal_domain}"
-      answer = var.iapetus_ip
-    }
-    janus = {
-      domain = "janus.${local.internal_domain}"
-      answer = var.janus_ip
+    for host in var.hosts :
+    host.name => {
+      domain = "${host.name}.${local.internal_domain}"
+      answer = host.ip
     }
   }
 }

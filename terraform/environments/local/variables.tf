@@ -8,37 +8,20 @@ variable "proxy_host" {
   description = "Hostname or IP address that services should resolve to"
 }
 
+variable "internal_domain" {
+  type        = string
+  description = "Internal domain used for host records"
+}
+
 variable "services" {
   type        = list(string)
   description = "List of service names exposed via the proxy"
 }
 
-variable "oberon_ip" {
-  type        = string
-  description = "IP address for the oberon host"
-}
-
-variable "titan_ip" {
-  type        = string
-  description = "IP address for the titan host"
-}
-
-variable "calisto_ip" {
-  type        = string
-  description = "IP address for the calisto host"
-}
-
-variable "atlas_ip" {
-  type        = string
-  description = "IP address for the atlas host"
-}
-
-variable "iapetus_ip" {
-  type        = string
-  description = "IP address for the iapetus host"
-}
-
-variable "janus_ip" {
-  type        = string
-  description = "IP address for the janus host"
+variable "hosts" {
+  type = list(object({
+    name = string
+    ip   = string
+  }))
+  description = "List of hosts managed in AdGuard"
 }

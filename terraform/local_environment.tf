@@ -1,14 +1,9 @@
 module "local_environment" {
   source = "./environments/local"
 
-  domain     = var.domain
-  proxy_host = var.proxy_host
-  services   = var.services
-
-  oberon_ip  = var.oberon_ip
-  titan_ip   = var.titan_ip
-  calisto_ip = var.calisto_ip
-  atlas_ip   = var.atlas_ip
-  iapetus_ip = var.iapetus_ip
-  janus_ip   = var.janus_ip
+  domain          = var.domain
+  proxy_host      = var.proxy_host
+  internal_domain = var.internal_domain
+  services        = var.services
+  hosts           = var.hosts
 }
