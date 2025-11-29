@@ -1,13 +1,13 @@
 ---
-- name: Ensure appdata entries exist for {{ svc.key }}
-  when: (svc.value.appdata | default([])) | length > 0
+- name: Ensure appdata entries exist for {{ svc.server }} / {{ svc.name }}
+  when: (svc.config.appdata | default([])) | length > 0
   ansible.builtin.file:
     path: "{{ app_entry.dest }}"
     state: directory
     owner: "{{ app_entry.owner | default(service_directory_owner | default('root')) }}"
     group: "{{ app_entry.group | default(service_directory_group | default('root')) }}"
     mode: "{{ app_entry.directory_mode | default(service_directory_mode | default('0750')) }}"
-  loop: "{{ svc.value.appdata | default([]) }}"
+  loop: "{{ svc.config.appdata | default([]) }}"
   loop_control:
     loop_var: app_entry
     label: "{{ app_entry.dest }}"

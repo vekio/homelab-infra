@@ -5,15 +5,17 @@
   gather_facts: false
 
   tasks:
+    - name: Initialize host services list
+      ansible.builtin.set_fact:
+        host_services: []
+
     - name: Gather services assigned to host
       ansible.builtin.set_fact:
-        host_services: >-
-          {{
-            services | default({}) | dict2items
-            | selectattr('value.hosts', 'defined')
-            | selectattr('value.hosts', 'contains', inventory_hostname)
-            | list
-          }}
+        host_services: "{{ host_services + [ { 'server': inventory_hostname, 'name': service.key, 'config': service.value } ] }}"
+      loop: "{{ (servers[inventory_hostname] | default({})) | dict2items }}"
+      loop_control:
+        loop_var: service
+        label: "{{ inventory_hostname }} -> {{ service.key }}"
 
     # - name: Ensure compose directories exist
     #   when: host_services | length > 0
@@ -21,7 +23,7 @@
     #   loop: "{{ host_services }}"
     #   loop_control:
     #     loop_var: svc
-    #     label: "{{ svc.key }}"
+    #     label: "{{ svc.server }} / {{ svc.name }}"
 
     - name: Ensure appdata directories exist
       when: host_services | length > 0
@@ -29,7 +31,7 @@
       loop: "{{ host_services }}"
       loop_control:
         loop_var: svc
-        label: "{{ svc.key }}"
+        label: "{{ svc.server }} / {{ svc.name }}"
 
     - name: Ensure extra directories exist
       when: host_services | length > 0
@@ -37,4 +39,4 @@
       loop: "{{ host_services }}"
       loop_control:
         loop_var: svc
-        label: "{{ svc.key }}"
+        label: "{{ svc.server }} / {{ svc.name }}"

@@ -1,13 +1,13 @@
 ---
-- name: Ensure extra directories exist for {{ svc.key }}
-  when: (svc.value.extra_directories | default([])) | length > 0
+- name: Ensure extra directories exist for {{ svc.server }} / {{ svc.name }}
+  when: (svc.config.extra_directories | default([])) | length > 0
   ansible.builtin.file:
     path: "{{ extra_dir.path }}"
     state: directory
     owner: "{{ extra_dir.owner | default(service_directory_owner | default('root')) }}"
     group: "{{ extra_dir.group | default(service_directory_group | default('root')) }}"
     mode: "{{ extra_dir.mode | default(service_directory_mode | default('0750')) }}"
-  loop: "{{ svc.value.extra_directories | default([]) }}"
+  loop: "{{ svc.config.extra_directories | default([]) }}"
   loop_control:
     loop_var: extra_dir
     label: "{{ extra_dir.path }}"
