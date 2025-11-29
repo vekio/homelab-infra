@@ -1,0 +1,24 @@
+---
+- name: Ensure service directories exist
+  hosts: "{{ service_directory_targets | default('all') }}"
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Gather services assigned to host
+      ansible.builtin.set_fact:
+        host_services: >-
+          {{
+            services | default({}) | dict2items
+            | selectattr('value.hosts', 'defined')
+            | selectattr('value.hosts', 'contains', inventory_hostname)
+            | list
+          }}
+
+    - name: Ensure directories exist for each assigned service
+      when: host_services | length > 0
+      ansible.builtin.include_tasks: tasks/manage_directories.yml
+      loop: "{{ host_services }}"
+      loop_control:
+        loop_var: svc
+        label: "{{ svc.key }}"
