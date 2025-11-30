@@ -6,7 +6,15 @@ terraform {
       source  = "gmichels/adguard"
       version = "1.3.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 5"
+    }
   }
+}
+
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
 }
 
 provider "adguard" {

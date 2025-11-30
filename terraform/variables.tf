@@ -32,6 +32,17 @@ variable "adguard_scheme" {
   type        = string
 }
 
+### Cloudflare provider configuration ###
+variable "cloudflare_api_token" {
+  type      = string
+  sensitive = true
+}
+
+variable "cloudflare_zone_name" {
+  type        = string
+  description = "Nombre de la zona de Cloudflare (ej: tudominio.com)"
+}
+
 ### DNS records ###
 variable "hosts" {
   description = "List of homelab hosts and their IPs"
