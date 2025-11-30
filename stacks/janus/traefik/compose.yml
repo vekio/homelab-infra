@@ -20,7 +20,7 @@ services:
       - /srv/appdata/traefik/logs:/logs:rw
     environment:
       - TZ=${TZ:-Europe/London}
-      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
+      - CF_DNS_API_TOKEN=${TRAEFIK_CF_DNS_API_TOKEN}
     labels:
       - traefik.enable=true
       - traefik.http.routers.traefik-rtr.entrypoints=https
