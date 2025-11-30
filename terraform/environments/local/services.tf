@@ -3,7 +3,7 @@ locals {
     for svc in var.services :
     svc.name => {
       domain = "${svc.name}.${var.domain}"
-      answer = svc.cname
+      answer = "${svc.host}.${var.internal_domain}"
     }
   }
 }

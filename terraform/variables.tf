@@ -44,7 +44,7 @@ variable "hosts" {
 variable "services" {
   description = "List of services and the host each one should CNAME to"
   type = list(object({
-    name  = string
-    cname = string
+    name = string
+    host = string
   }))
 }

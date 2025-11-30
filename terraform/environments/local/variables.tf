@@ -10,10 +10,10 @@ variable "internal_domain" {
 
 variable "services" {
   type = list(object({
-    name  = string
-    cname = string
+    name = string
+    host = string
   }))
-  description = "List of service names and the host they should resolve to"
+  description = "List of service names and the internal host (without domain) they should resolve to"
 }
 
 variable "hosts" {
