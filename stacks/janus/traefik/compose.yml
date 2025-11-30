@@ -3,6 +3,8 @@ services:
     image: traefik:latest
     container_name: traefik-janus
     restart: always
+    depends_on:
+      - socket-proxy
     networks:
       - proxy
       - docker-proxynet
@@ -13,7 +15,7 @@ services:
       # - 8080:8080 # http api dashboard
     volumes:
       # - /var/run/docker.sock:/var/run/docker.sock:ro # better use socket-proxy instead
-      - /srv/appdata/traefik:/etc/traefik/:ro # put the provided traefik.yml and dynamic files config.yml
+      - /srv/appdata/traefik/config:/etc/traefik/:ro # put the provided traefik.yml and dynamic folder here
       - /srv/appdata/traefik/certificates:/letsencrypt:rw
       - /srv/appdata/traefik/logs:/logs:rw
     environment:
@@ -21,7 +23,7 @@ services:
       - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.traefik-rtr.entrypoints=websecure
+      - traefik.http.routers.traefik-rtr.entrypoints=https
       - traefik.http.routers.traefik-rtr.rule=Host(`traefik.${DOMAIN}`)
       - traefik.http.routers.traefik-rtr.service=api@internal
     security_opt:
@@ -33,11 +35,11 @@ services:
     restart: always
     networks:
       - docker-proxynet
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - CONTAINERS=1
       - EVENTS=1
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
     read_only: true
     tmpfs:
       - /run
