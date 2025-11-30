@@ -1,0 +1,127 @@
+---
+# Deploy a single service described in group_vars/all/catalog.yml.
+
+- name: Ensure service_name is provided
+  ansible.builtin.assert:
+    that:
+      - service_name is defined
+      - service_name | length > 0
+    fail_msg: "Debes definir service_name (ansible-playbook -e service_name=<servicio>)."
+
+- name: Collect services for this host from the catalog
+  ansible.builtin.set_fact:
+    _host_services: "{{ servers[inventory_hostname] | default({}) }}"
+
+- name: Ensure the requested service exists in the catalog
+  ansible.builtin.assert:
+    that:
+      - service_name in _host_services
+    fail_msg: "El servicio {{ service_name }} no está declarado para {{ inventory_hostname }} (revisa servers: en group_vars/all/catalog.yml)."
+
+- name: Cache service definition
+  ansible.builtin.set_fact:
+    _service_definition: "{{ _host_services[service_name] }}"
+
+# 1
+- name: Ensure compose destination directory exists
+  when: _service_definition.compose is defined
+  ansible.builtin.file:
+    path: "{{ _service_definition.compose.dest | dirname  }}" # TODO hace falta project_dir?"{{  _service_definition.compose.project_dir | default(_service_definition.compose.dest | dirname)  }}"
+    state: directory
+    owner: "{{ _service_definition.compose.owner | default(service_directory_owner | default('root')) }}"
+    group: "{{ _service_definition.compose.group | default(service_directory_group | default('root')) }}"
+    mode: "{{ _service_definition.compose.directory_mode | default(service_directory_mode | default('0750')) }}"
+
+# 2
+- name: Deploy compose file
+  when: _service_definition.compose is defined
+  ansible.builtin.copy:
+    src: "{{ _service_definition.compose.src }}"
+    dest: "{{ _service_definition.compose.dest }}"
+    owner: "{{ _service_definition.compose.owner | default(service_directory_owner | default('root')) }}"
+    group: "{{ _service_definition.compose.group | default(service_directory_group | default('root')) }}"
+    mode: "{{ _service_definition.compose.mode | default(service_file_mode | default('0640')) }}"
+    backup: "{{ _service_definition.compose.backup | default(false) }}" # TODO que es esto?
+
+# 3
+- name: Ensure extra directories exist
+  when: (_service_definition.extra_directories | default([])) | length > 0
+  ansible.builtin.file:
+    path: "{{ extra_dir.path }}"
+    state: directory
+    owner: "{{ extra_dir.owner | default(service_directory_owner | default('root')) }}"
+    group: "{{ extra_dir.group | default(service_directory_group | default('root')) }}"
+    mode: "{{ extra_dir.mode | default(service_directory_mode | default('0750')) }}"
+  loop: "{{ _service_definition.extra_directories | default([]) }}"
+  loop_control:
+    loop_var: extra_dir
+    label: "{{ extra_dir.path }}"
+
+# 4
+- name: Ensure appdata parent directories exist
+  when: (_service_definition.appdata | default([])) | length > 0
+  ansible.builtin.file:
+    path: "{{ app_entry.dest | dirname }}"
+    state: directory
+    owner: "{{ app_entry.owner | default(service_directory_owner | default('root')) }}"
+    group: "{{ app_entry.group | default(service_directory_group | default('root')) }}"
+    mode: "{{ app_entry.directory_mode | default(service_directory_mode | default('0750')) }}"
+  loop: "{{ _service_definition.appdata | default([]) }}"
+  loop_control:
+    loop_var: app_entry
+    label: "{{ app_entry.dest | dirname }}"
+
+# 5
+- name: Sync appdata files and directories
+  when: (_service_definition.appdata | default([])) | length > 0
+  ansible.builtin.copy:
+    src: "{{ app_entry.src }}"
+    dest: "{{ app_entry.dest }}"
+    owner: "{{ app_entry.owner | default(service_directory_owner | default('root')) }}"
+    group: "{{ app_entry.group | default(service_directory_group | default('root')) }}"
+    mode: "{{ app_entry.mode | default(service_file_mode | default('0640')) }}"
+    directory_mode: "{{ app_entry.directory_mode | default(service_directory_mode | default('0750')) }}"
+    backup: "{{ app_entry.backup | default(false) }}"
+    force: "{{ app_entry.force | default(true) }}"
+  loop: "{{ _service_definition.appdata | default([]) }}"
+  loop_control:
+    loop_var: app_entry
+    label: "{{ app_entry.dest }}"
+
+- name: Ensure template parent directories exist
+  when: (_service_definition.templates | default([])) | length > 0
+  ansible.builtin.file:
+    path: "{{ template_entry.dest | dirname }}"
+    state: directory
+    owner: "{{ template_entry.owner | default(service_directory_owner | default('root')) }}"
+    group: "{{ template_entry.group | default(service_directory_group | default('root')) }}"
+    mode: "{{ template_entry.directory_mode | default(service_directory_mode | default('0750')) }}"
+  loop: "{{ _service_definition.templates | default([]) }}"
+  loop_control:
+    loop_var: template_entry
+    label: "{{ template_entry.dest | dirname }}"
+
+- name: Render templates
+  when: (_service_definition.templates | default([])) | length > 0
+  ansible.builtin.template:
+    src: "{{ template_entry.src }}"
+    dest: "{{ template_entry.dest }}"
+    owner: "{{ template_entry.owner | default(service_directory_owner | default('root')) }}"
+    group: "{{ template_entry.group | default(service_directory_group | default('root')) }}"
+    mode: "{{ template_entry.mode | default(service_file_mode | default('0640')) }}"
+    backup: "{{ template_entry.backup | default(false) }}"
+    force: "{{ template_entry.force | default(true) }}"
+    newline_sequence: "{{ template_entry.newline_sequence | default(omit) }}"
+    variable_start_string: "{{ template_entry.variable_start_string | default(omit) }}"
+    variable_end_string: "{{ template_entry.variable_end_string | default(omit) }}"
+    block_start_string: "{{ template_entry.block_start_string | default(omit) }}"
+    block_end_string: "{{ template_entry.block_end_string | default(omit) }}"
+    trim_blocks: "{{ template_entry.trim_blocks | default(omit) }}"
+    lstrip_blocks: "{{ template_entry.lstrip_blocks | default(omit) }}"
+    keep_trailing_newline: "{{ template_entry.keep_trailing_newline | default(omit) }}"
+    validate: "{{ template_entry.validate | default(omit) }}"
+    vars: "{{ template_entry.vars | default(omit) }}"
+  loop: "{{ _service_definition.templates | default([]) }}"
+  loop_control:
+    loop_var: template_entry
+    label: "{{ template_entry.dest }}"

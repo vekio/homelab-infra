@@ -1,0 +1,27 @@
+---
+- name: Deploy every catalog service assigned to each host
+  hosts: "{{ service_deploy_targets | default('homelab_hosts') }}"
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Validate required secrets are provided
+      ansible.builtin.include_tasks: "{{ playbook_dir }}/tasks/assert_secrets.yml"
+
+    - name: Collect catalog entries for {{ inventory_hostname }}
+      ansible.builtin.set_fact:
+        _catalog_services: "{{ servers[inventory_hostname] | default({}) }}"
+
+    - name: Skip hosts without catalog services
+      when: (_catalog_services | length) == 0
+      ansible.builtin.meta: end_host
+
+    - name: Deploy catalog services sequentially
+      ansible.builtin.include_role:
+        name: service_deploy
+      loop: "{{ _catalog_services | dict2items }}"
+      loop_control:
+        loop_var: svc
+        label: "{{ svc.key }}"
+      vars:
+        service_name: "{{ svc.key }}"
