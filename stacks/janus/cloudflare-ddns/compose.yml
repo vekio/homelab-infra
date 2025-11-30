@@ -1,0 +1,22 @@
+services:
+  cloudflare-ddns:
+    image: favonia/cloudflare-ddns:latest
+    container_name: cloudflare-ddns
+    restart: always
+    networks:
+      - ddns
+    environment:
+      - CLOUDFLARE_API_TOKEN=${DDNS_CF_DNS_API_TOKEN}
+      - DOMAINS=home.${DOMAIN}
+      - PROXIED=false
+      - TZ=${TZ:-Europe/London}
+      - IP6_PROVIDER=none
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - all
+    read_only: true
+
+networks:
+  ddns:
+    name: ddns
