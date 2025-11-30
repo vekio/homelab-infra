@@ -1,4 +1,4 @@
-Port {{ ssh_port }}
+Port {{ ssh_port_resolved }}
 Protocol 2
 AddressFamily any
 PasswordAuthentication no
@@ -11,8 +11,8 @@ MaxAuthTries 3
 LoginGraceTime 30
 ClientAliveInterval 300
 ClientAliveCountMax 2
-AllowAgentForwarding {{ 'yes' if ssh_allow_agent_forwarding else 'no' }}
-AllowTcpForwarding {{ 'yes' if ssh_allow_tcp_forwarding else 'no' }}
+AllowAgentForwarding {{ 'yes' if ssh_allow_agent_forwarding_resolved else 'no' }}
+AllowTcpForwarding {{ 'yes' if ssh_allow_tcp_forwarding_resolved else 'no' }}
 X11Forwarding no
 UseDNS no
 PrintLastLog yes
@@ -21,9 +21,9 @@ Subsystem sftp /usr/lib/openssh/sftp-server
 {% if ssh_banner_path %}
 Banner {{ ssh_banner_path }}
 {% endif %}
-{% if ssh_allowed_users | length > 0 %}
-AllowUsers {{ ssh_allowed_users | join(' ') }}
+{% if ssh_allowed_users_resolved | length > 0 %}
+AllowUsers {{ ssh_allowed_users_resolved | join(' ') }}
 {% endif %}
-{% if ssh_allowed_groups | length > 0 %}
-AllowGroups {{ ssh_allowed_groups | join(' ') }}
+{% if ssh_allowed_groups_resolved | length > 0 %}
+AllowGroups {{ ssh_allowed_groups_resolved | join(' ') }}
 {% endif %}

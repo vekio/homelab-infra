@@ -1,20 +1,20 @@
 ---
 - name: Apply SSH hardening profile
-  hosts: "{{ ssh_targets | default('homelab_hosts') }}"
+  hosts: "{{ setup_targets }}"
   become: true
   gather_facts: true
 
   vars:
-    homelab_templates_dir: "{{ playbook_dir }}/templates"
-    ssh_port_effective: "{{ ssh_port | default(22) }}"
-    ssh_allowed_users_effective: "{{ ssh_allowed_users | default([]) }}"
-    ssh_allowed_groups_effective: "{{ ssh_allowed_groups | default([]) }}"
-    ssh_banner_text_effective: "{{ ssh_banner_text | default('', true) }}"
+    homelab_templates_dir: "{{ playbook_dir }}/../templates"
+    ssh_port_resolved: "{{ (ssh_port | default(22)) }}"
+    ssh_allowed_users_resolved: "{{ ssh_allowed_users | default([]) }}"
+    ssh_allowed_groups_resolved: "{{ ssh_allowed_groups | default([]) }}"
+    ssh_banner_text_resolved: "{{ ssh_banner_text | default('', true) }}"
     ssh_banner_template: "{{ homelab_templates_dir }}/homelab_banner.txt.j2"
     ssh_hardening_template: "{{ homelab_templates_dir }}/ssh_hardening.conf.j2"
     ssh_banner_path: /etc/ssh/sshd_banner
-    ssh_allow_agent_forwarding_effective: "{{ ssh_allow_agent_forwarding | default(false) }}"
-    ssh_allow_tcp_forwarding_effective: "{{ ssh_allow_tcp_forwarding | default(false) }}"
+    ssh_allow_agent_forwarding_resolved: "{{ ssh_allow_agent_forwarding | default(false) }}"
+    ssh_allow_tcp_forwarding_resolved: "{{ ssh_allow_tcp_forwarding | default(false) }}"
     ssh_service_name: "{{ 'ssh' if ansible_os_family == 'Debian' else 'sshd' }}"
 
   tasks:
@@ -32,17 +32,17 @@
         mode: "0755"
 
     - name: Deploy SSH banner content
-      when: ssh_banner_text_effective | length > 0
+      when: ssh_banner_text_resolved | length > 0
       ansible.builtin.copy:
         dest: "{{ ssh_banner_path }}"
-        content: "{{ ssh_banner_text_effective }}"
+        content: "{{ ssh_banner_text_resolved }}"
         owner: root
         group: root
         mode: "0644"
       notify: Restart SSH
 
     - name: Deploy default SSH banner template
-      when: ssh_banner_text_effective | length == 0
+      when: ssh_banner_text_resolved | length == 0
       ansible.builtin.template:
         src: "{{ ssh_banner_template }}"
         dest: "{{ ssh_banner_path }}"
@@ -59,12 +59,6 @@
         group: root
         mode: "0644"
       notify: Restart SSH
-      vars:
-        ssh_port: "{{ ssh_port_effective }}"
-        ssh_allowed_users: "{{ ssh_allowed_users_effective }}"
-        ssh_allowed_groups: "{{ ssh_allowed_groups_effective }}"
-        ssh_allow_agent_forwarding: "{{ ssh_allow_agent_forwarding_effective }}"
-        ssh_allow_tcp_forwarding: "{{ ssh_allow_tcp_forwarding_effective }}"
 
     - name: Ensure SSH service is enabled
       ansible.builtin.service:

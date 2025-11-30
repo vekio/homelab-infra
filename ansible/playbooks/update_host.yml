@@ -1,6 +1,6 @@
 ---
 - name: Bootstrap host for homelab workloads
-  hosts: "{{ bootstrap_targets | default('homelab_hosts') }}"
+  hosts: "{{ setup_targets }}"
   become: true
   gather_facts: true
 
