@@ -1,7 +1,9 @@
 ---
-- name: Install Docker Engine
-  hosts: "{{ docker_targets | default('docker_hosts') }}"
+- name: Install and configure Docker Engine
+  hosts: "{{ docker_targets | default('homelab_hosts') }}"
   become: true
+  gather_facts: true
+
   vars:
     docker_users: []
     docker_repo_base_url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}"
@@ -18,21 +20,22 @@
       {{ docker_repo_base_url }} {{ ansible_distribution_release }} stable
 
   pre_tasks:
-    - name: Fail for unsupported distributions
-      ansible.builtin.fail:
-        msg: "This playbook currently supports Debian-based distributions only."
-      when: ansible_os_family != "Debian"
+    - name: Ensure Debian-based distribution
+      ansible.builtin.assert:
+        that:
+          - ansible_os_family == "Debian"
+        fail_msg: "This playbook currently supports Debian-based distributions only."
 
   tasks:
-    - name: Install transport packages
+    - name: Install prerequisite packages
       ansible.builtin.apt:
         name:
           - ca-certificates
           - curl
           - gnupg
           - lsb-release
-        update_cache: true
         state: present
+        update_cache: true
 
     - name: Ensure APT keyring directory exists
       ansible.builtin.file:
@@ -52,7 +55,7 @@
         mode: "0644"
       when: not docker_gpg.stat.exists
 
-    - name: Configure Docker repository
+    - name: Configure Docker APT repository
       ansible.builtin.apt_repository:
         repo: "{{ docker_repo }}"
         filename: docker
@@ -66,8 +69,8 @@
           - containerd.io
           - docker-buildx-plugin
           - docker-compose-plugin
-        update_cache: true
         state: present
+        update_cache: true
 
     - name: Ensure Docker daemon is enabled
       ansible.builtin.service:
@@ -76,9 +79,9 @@
         state: started
 
     - name: Add users to docker group
+      when: docker_users | length > 0
       ansible.builtin.user:
         name: "{{ item }}"
         groups: docker
         append: true
       loop: "{{ docker_users }}"
-      when: docker_users | length > 0
