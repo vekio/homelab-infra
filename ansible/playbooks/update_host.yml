@@ -1,0 +1,13 @@
+---
+- name: Bootstrap host for homelab workloads
+  hosts: "{{ bootstrap_targets | default('homelab_hosts') }}"
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Update and upgrade packages
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: dist
+        autoremove: true
+        autoclean: true
