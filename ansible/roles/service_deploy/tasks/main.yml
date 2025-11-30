@@ -26,7 +26,7 @@
 - name: Ensure compose destination directory exists
   when: _service_definition.compose is defined
   ansible.builtin.file:
-    path: "{{ _service_definition.compose.dest | dirname  }}" # TODO hace falta project_dir?"{{  _service_definition.compose.project_dir | default(_service_definition.compose.dest | dirname)  }}"
+    path: "{{ _service_definition.compose.dest | dirname  }}"
     state: directory
     owner: "{{ _service_definition.compose.owner | default(service_directory_owner | default('root')) }}"
     group: "{{ _service_definition.compose.group | default(service_directory_group | default('root')) }}"
@@ -41,7 +41,7 @@
     owner: "{{ _service_definition.compose.owner | default(service_directory_owner | default('root')) }}"
     group: "{{ _service_definition.compose.group | default(service_directory_group | default('root')) }}"
     mode: "{{ _service_definition.compose.mode | default(service_file_mode | default('0640')) }}"
-    backup: "{{ _service_definition.compose.backup | default(false) }}" # TODO que es esto?
+    backup: "{{ _service_definition.compose.backup | default(false) }}"
 
 # 3
 - name: Ensure extra directories exist
@@ -88,6 +88,7 @@
     loop_var: app_entry
     label: "{{ app_entry.dest }}"
 
+# 6
 - name: Ensure template parent directories exist
   when: (_service_definition.templates | default([])) | length > 0
   ansible.builtin.file:
@@ -101,6 +102,7 @@
     loop_var: template_entry
     label: "{{ template_entry.dest | dirname }}"
 
+# 7
 - name: Render templates
   when: (_service_definition.templates | default([])) | length > 0
   ansible.builtin.template:
