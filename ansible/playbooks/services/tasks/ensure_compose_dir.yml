@@ -1,9 +1,0 @@
----
-- name: Ensure compose directory exists for {{ svc.server }} / {{ svc.name }}
-  when: svc.config.compose is defined
-  ansible.builtin.file:
-    path: "{{ svc.config.compose.project_dir }}"
-    state: directory
-    owner: "{{ svc.config.compose.owner | default(service_directory_owner | default('root')) }}"
-    group: "{{ svc.config.compose.group | default(service_directory_group | default('root')) }}"
-    mode: "{{ svc.config.compose.directory_mode | default(service_directory_mode | default('0750')) }}"

@@ -1,9 +1,0 @@
----
-- name: Copy compose file for {{ svc.key }}
-  when: svc.value.compose is defined
-  ansible.builtin.copy:
-    src: "{{ repo_root }}/{{ svc.value.compose.src }}"
-    dest: "{{ svc.value.compose.dest }}"
-    owner: "{{ svc.value.compose.owner | default(service_directory_owner | default('root')) }}"
-    group: "{{ svc.value.compose.group | default(service_directory_group | default('root')) }}"
-    mode: "{{ svc.value.compose.mode | default(service_file_mode | default('0640')) }}"
