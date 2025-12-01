@@ -3,7 +3,19 @@ services:
     image: traefik/whoami:latest
     container_name: whoami
     restart: unless-stopped
-    ports:
-      - 8080:80/tcp
+    networks:
+      - proxy
+    # ports:
+    #   - 8080:80/tcp # https
     environment:
       - TZ=${TZ:-Europe/London}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.whoami-rtr.entrypoints=http
+      - traefik.http.routers.whoami-rtr.rule=Host(`whoami.${DOMAIN}`)
+      - traefik.http.routers.whoami-rtr.service=whoami-svc
+      - traefik.http.services.whoami-svc.loadbalancer.server.port=80
+
+networks:
+  proxy:
+    external: true
