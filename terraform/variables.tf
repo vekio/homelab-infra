@@ -32,7 +32,7 @@ variable "adguard_scheme" {
   type        = string
 }
 
-### Cloudflare provider configuration ###
+### Cloudflare ###
 variable "cloudflare_api_token" {
   type      = string
   sensitive = true
@@ -41,6 +41,17 @@ variable "cloudflare_api_token" {
 variable "cloudflare_zone_name" {
   type        = string
   description = "Nombre de la zona de Cloudflare (ej: tudominio.com)"
+}
+
+variable "cloudflare_account_id" {
+  description = "Account ID for your Cloudflare account"
+  type        = string
+  sensitive   = true
+}
+
+variable "cloudflare_tunnel_name" {
+  description = "Friendly name for the tunnel"
+  type        = string
 }
 
 ### DNS records ###
@@ -53,8 +64,11 @@ variable "hosts" {
 }
 
 variable "services" {
-  description = "List of service names exposed through the proxy"
-  type        = list(string)
+  description = "List of services with visibility flags"
+  type = list(object({
+    name   = string
+    public = bool
+  }))
 }
 
 variable "proxy_host" {

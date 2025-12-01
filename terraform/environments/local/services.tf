@@ -1,8 +1,8 @@
 locals {
   service_records = {
     for svc in var.services :
-    svc => {
-      domain = "${svc}.${var.domain}"
+    svc.name => {
+      domain = "${svc.name}.${var.domain}"
       answer = var.proxy_host
     }
   }

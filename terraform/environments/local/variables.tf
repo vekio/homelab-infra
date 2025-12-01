@@ -17,8 +17,11 @@ variable "hosts" {
 }
 
 variable "services" {
-  type        = list(string)
-  description = "Service names that should CNAME to the proxy host"
+  type = list(object({
+    name   = string
+    public = bool
+  }))
+  description = "Services that should CNAME to the proxy host and optionally be published via tunnel"
 }
 
 variable "proxy_host" {
