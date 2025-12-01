@@ -13,6 +13,7 @@ services:
       - 443:443/tcp # https
       # - 443:443/udp # https http3 quic
       # - 8080:8080 # http api dashboard
+      - 25565:25565/tcp # minecraft tcp entrypoint
     volumes:
       # - /var/run/docker.sock:/var/run/docker.sock:ro # better use socket-proxy instead
       - /srv/appdata/traefik/config:/etc/traefik/:ro # put the provided traefik.yml and dynamic folder here

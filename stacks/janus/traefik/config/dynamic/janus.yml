@@ -17,3 +17,17 @@ http:
       loadBalancer:
         servers:
           - url: "http://janus.home.local:8080"
+
+tcp:
+  routers:
+    mantita:
+      entryPoints:
+        - minecraft
+      rule: "HostSNI(`*`)"
+      service: mantita
+
+  services:
+    mantita:
+      loadBalancer:
+        servers:
+          - address: "pandora.home.local:25565"
