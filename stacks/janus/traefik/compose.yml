@@ -21,8 +21,6 @@ services:
     environment:
       - TZ=${TZ:-Europe/London}
       - TRAEFIK_DOMAIN=${DOMAIN}
-      - TRAEFIK_ACME_LETSENCRYPT_URL=${TRAEFIK_ACME_LETSENCRYPT_URL}
-      - TRAEFIK_ACME_CERT_EMAIL=${TRAEFIK_ACME_CERT_EMAIL}
       - CF_DNS_API_TOKEN=${TRAEFIK_CF_DNS_API_TOKEN}
     # labels:
     #   - traefik.enable=true
