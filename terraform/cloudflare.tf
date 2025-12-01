@@ -4,15 +4,6 @@ data "cloudflare_zone" "casta_me" {
   }
 }
 
-resource "cloudflare_dns_record" "home" {
-  zone_id = data.cloudflare_zone.casta_me.id
-  name    = "home"
-  type    = "A"
-  content = "1.1.1.1" # placeholder, DDNS overwrite
-  ttl     = 120
-  proxied = false
-}
-
 resource "cloudflare_dns_record" "mantita" {
   zone_id = data.cloudflare_zone.casta_me.id
   name    = "mantita"
