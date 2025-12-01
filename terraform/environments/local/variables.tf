@@ -8,18 +8,20 @@ variable "internal_domain" {
   description = "Internal domain used for host records"
 }
 
-variable "services" {
-  type = list(object({
-    name = string
-    host = string
-  }))
-  description = "List of service names and the internal host (without domain) they should resolve to"
-}
-
 variable "hosts" {
   type = list(object({
     name = string
     ip   = string
   }))
   description = "List of hosts managed in AdGuard"
+}
+
+variable "services" {
+  type        = list(string)
+  description = "Service names that should CNAME to the proxy host"
+}
+
+variable "proxy_host" {
+  type        = string
+  description = "FQDN or IP of the proxy target for service records"
 }

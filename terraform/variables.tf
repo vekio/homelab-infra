@@ -53,9 +53,11 @@ variable "hosts" {
 }
 
 variable "services" {
-  description = "List of services and the host each one should CNAME to"
-  type = list(object({
-    name = string
-    host = string
-  }))
+  description = "List of service names exposed through the proxy"
+  type        = list(string)
+}
+
+variable "proxy_host" {
+  description = "Nombre FQDN (o IP) del proxy interno"
+  type        = string
 }

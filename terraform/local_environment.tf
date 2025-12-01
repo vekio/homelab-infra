@@ -5,4 +5,5 @@ module "local_environment" {
   internal_domain = var.internal_domain
   services        = var.services
   hosts           = var.hosts
+  proxy_host      = var.proxy_host
 }
