@@ -5,7 +5,8 @@ http:
       entryPoints:
         - https
       service: adguard
-    traefik-dashboard:
+
+    traefik:
       rule: 'Host(`traefik.{{ env "TRAEFIK_DOMAIN" }}`)'
       entryPoints:
         - https
