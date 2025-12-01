@@ -3,11 +3,11 @@ services:
     image: traefik:latest
     container_name: traefik-janus
     restart: always
-    # depends_on:
-    #   - socket-proxy
-    # networks:
-    #   - proxy
-    #   - docker-proxynet
+    depends_on:
+      - socket-proxy
+    networks:
+      - proxy
+      - docker-proxynet
     ports:
       # - 80:80/tcp # http
       - 443:443/tcp # https
@@ -20,32 +20,32 @@ services:
       - /srv/appdata/traefik/logs:/logs:rw
     environment:
       - TZ=${TZ:-Europe/London}
-      - TRAEFIK_DOMAIN=${DOMAIN}
       - CF_DNS_API_TOKEN=${TRAEFIK_CF_DNS_API_TOKEN}
-    # labels:
-    #   - traefik.enable=true
-    #   - traefik.http.routers.traefik-rtr.entrypoints=https
-    #   - traefik.http.routers.traefik-rtr.rule=Host(`traefik.${DOMAIN}`)
-    #   - traefik.http.routers.traefik-rtr.service=api@internal
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik-rtr.entrypoints=https
+      - traefik.http.routers.traefik-rtr.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.traefik-rtr.service=api@internal
     security_opt:
       - no-new-privileges:true
 
-  # socket-proxy:
-  #   image: lscr.io/linuxserver/socket-proxy:latest
-  #   container_name: socket-proxy
-  #   restart: always
-  #   networks:
-  #     - docker-proxynet
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #   environment:
-  #     - CONTAINERS=1
-  #     - EVENTS=1
-  #   read_only: true
-  #   tmpfs:
-  #     - /run
-# networks:
-#   proxy:
-#     name: proxy
-#   docker-proxynet:
-#     internal: true
+  socket-proxy:
+    image: lscr.io/linuxserver/socket-proxy:latest
+    container_name: socket-proxy
+    restart: always
+    networks:
+      - docker-proxynet
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - CONTAINERS=1
+      - EVENTS=1
+    read_only: true
+    tmpfs:
+      - /run
+
+networks:
+  proxy:
+    name: proxy
+  docker-proxynet:
+    internal: true

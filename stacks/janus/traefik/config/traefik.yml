@@ -62,15 +62,15 @@ providers:
     directory: /etc/traefik/dynamic # Dynamic configuration directory
     watch: true # Automatically reload configuration when files in this directory change
 
-  # docker:
-  #   # Enable watching Docker events and auto-discover services
-  #   watch: true
-  #   # Only expose services explicitly marked in Docker labels
-  #   exposedByDefault: false
-  #   # Use socket-proxy instead of mounting the Docker socket directly
-  #   endpoint: "tcp://socket-proxy:2375"
-  #   # Ensure Traefik connects to the 'proxy' Docker network
-  #   network: proxy
+  docker:
+    # Enable watching Docker events and auto-discover services
+    watch: true
+    # Only expose services explicitly marked in Docker labels
+    exposedByDefault: false
+    # Use socket-proxy instead of mounting the Docker socket directly
+    endpoint: "tcp://socket-proxy:2375"
+    # Ensure Traefik connects to the 'proxy' Docker network
+    network: proxy
 
 api:
   dashboard: true
