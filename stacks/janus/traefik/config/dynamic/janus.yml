@@ -1,0 +1,13 @@
+http:
+  routers:
+    adguard:
+      rule: 'Host(`adguard.{{ env "TRAEFIK_DOMAIN" }}`)'
+      entryPoints:
+        - https
+      service: adguard
+
+  services:
+    adguard:
+      loadBalancer:
+        servers:
+          - url: "http://janus.home.local:8080"
