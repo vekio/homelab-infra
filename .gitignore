@@ -15,5 +15,3 @@ docs/
 .ansible/
 *.retry
 ansible/*.retry
-ansible/inventory.yml
-ansible/vars.yml
