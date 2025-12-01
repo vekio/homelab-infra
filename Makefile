@@ -1,25 +1,32 @@
 ANSIBLE_PLAYBOOK ?= ansible-playbook
-export ANSIBLE_CONFIG := $(CURDIR)/ansible/ansible.cfg
-PLAYBOOK_DIR := ansible/playbooks
-VARS_FILE := ansible/vars.yml
-INVENTORY := ansible/inventory.yml
-ANSIBLE_ARGS := -i $(INVENTORY) -e @$(VARS_FILE)
+export ANSIBLE_CONFIG := ansible/ansible.cfg
+ANSIBLE_VARS := --extra-vars @ansible/vars.yml
 
-.PHONY: hello prepare sudo harden docker all
+.PHONY: update sudo harden docker deploy setup_host
 
-hello:
-	$(ANSIBLE_PLAYBOOK) $(PLAYBOOK_DIR)/hello_world.yml $(ANSIBLE_ARGS)
+# update: Perform apt upgrade and basic housekeeping.
+update:
+	@echo "🛠️  Running host update..."
+	$(ANSIBLE_PLAYBOOK) ansible/playbooks/update_host.yml $(ANSIBLE_VARS)
 
-prepare:
-	$(ANSIBLE_PLAYBOOK) $(PLAYBOOK_DIR)/prepare_host.yml $(ANSIBLE_ARGS)
-
+# sudo: Manage passwordless sudo drop-ins.
 sudo:
-	$(ANSIBLE_PLAYBOOK) $(PLAYBOOK_DIR)/configure_sudo.yml $(ANSIBLE_ARGS)
+	@echo "🧾  Configuring sudoers..."
+	$(ANSIBLE_PLAYBOOK) ansible/playbooks/setup_passwordless_sudo.yml $(ANSIBLE_VARS) --ask-become-pass
 
+# harden: Apply SSH hardening profile.
 harden:
-	$(ANSIBLE_PLAYBOOK) $(PLAYBOOK_DIR)/harden_ssh.yml $(ANSIBLE_ARGS)
+	@echo "🛡️  Applying SSH hardening..."
+	$(ANSIBLE_PLAYBOOK) ansible/playbooks/secure_ssh.yml $(ANSIBLE_VARS)
 
+# docker: Install/upgrade Docker Engine stack.
 docker:
-	$(ANSIBLE_PLAYBOOK) $(PLAYBOOK_DIR)/install_docker.yml $(ANSIBLE_ARGS)
+	@echo "🐳  Installing/updating Docker..."
+	$(ANSIBLE_PLAYBOOK) ansible/playbooks/setup_docker_engine.yml $(ANSIBLE_VARS)
 
-all: hello prepare sudo harden docker
+# deploy: Render and sync every catalog service on each host.
+deploy:
+	@echo "🚀  Deploying all catalog services..."
+	$(ANSIBLE_PLAYBOOK) ansible/playbooks/deploy_all_services.yml $(ANSIBLE_VARS)
+
+setup_host: sudo update harden docker
