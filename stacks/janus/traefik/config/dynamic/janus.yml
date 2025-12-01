@@ -1,13 +1,13 @@
 http:
   routers:
     adguard:
-      rule: 'Host(`adguard.{{ env "TRAEFIK_DOMAIN" }}`)'
+      rule: "Host(`adguard.{{ domain }}`)"
       entryPoints:
         - https
       service: adguard
 
     traefik:
-      rule: 'Host(`traefik.{{ env "TRAEFIK_DOMAIN" }}`)'
+      rule: "Host(`traefik.{{ domain }}`)"
       entryPoints:
         - https
       service: api@internal
