@@ -17,12 +17,11 @@ module "cloudflare" {
   ingress = [
     for svc in var.services :
     {
-      name    = svc.name
+      name = svc.name
       service = coalesce(
         try(svc.tunnel_service, null),
         format("https://%s.%s", svc.name, var.domain)
       )
     } if svc.public
   ]
-  catchall = var.cloudflare_tunnel_catchall
 }
