@@ -1,0 +1,13 @@
+http:
+  routers:
+    whoami:
+      rule: 'Host(`whoami.{{ env "TRAEFIK_DOMAIN" }}`)'
+      entryPoints:
+        - https
+      service: whoami
+
+  services:
+    whoami:
+      loadBalancer:
+        servers:
+          - url: "http://atlas.home.local:8080"
