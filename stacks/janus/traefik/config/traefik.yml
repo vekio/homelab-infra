@@ -45,9 +45,9 @@ entryPoints:
         # Automatically issue wildcard certificates via the cloudflare certificate resolver
         certResolver: cloudflare
         domains:
-          - main: '{{ env "TRAEFIK_DOMAIN" }}'
+          - main: "{{ domain }}"
             sans:
-              - '*.{{ env "TRAEFIK_DOMAIN" }}'
+              - "*.{{ domain }}"
       middlewares:
         - secure-headers@file
 
@@ -83,9 +83,9 @@ certificatesResolvers:
   cloudflare:
     acme:
       # Email for Let's Encrypt notifications (e.g., certificate expiration)
-      email: '{{ env "TRAEFIK_ACME_CERT_EMAIL" }}'
+      email: "{{ acme_cert_email }}"
       # Let's Encrypt ACME server endpoint (set to production or staging environment)
-      caServer: '{{ env "TRAEFIK_ACME_LETSENCRYPT_URL" }}'
+      caServer: "{{ acme_letsencrypt_url }}"
       # File where Let's Encrypt certificates are stored
       storage: /letsencrypt/acme.json
       dnsChallenge:
