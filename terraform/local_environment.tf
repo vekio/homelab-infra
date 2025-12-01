@@ -18,7 +18,11 @@ module "cloudflare" {
     for svc in var.services :
     {
       name    = svc.name
-      service = format("https://%s.%s", svc.name, var.domain)
+      service = coalesce(
+        try(svc.tunnel_service, null),
+        format("https://%s.%s", svc.name, var.domain)
+      )
     } if svc.public
   ]
+  catchall = var.cloudflare_tunnel_catchall
 }
