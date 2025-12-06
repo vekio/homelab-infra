@@ -10,6 +10,11 @@ variable "internal_domain" {
   default     = "home.local"
 }
 
+variable "domain_demos" {
+  description = "Public demo domain for externally exposed services"
+  type        = string
+}
+
 ### AdGuard provider configuration ###
 variable "adguard_host" {
   description = "Address of your AdGuard Home server"

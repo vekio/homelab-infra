@@ -48,6 +48,9 @@ entryPoints:
           - main: "{{ domain }}"
             sans:
               - "*.{{ domain }}"
+          - main: "{{ domain_demos }}"
+            sans:
+              - "*.{{ domain_demos }}"
       middlewares:
         - secure-headers@file
 

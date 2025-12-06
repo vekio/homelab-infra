@@ -12,7 +12,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.whoami-rtr.entrypoints=http
-      - traefik.http.routers.whoami-rtr.rule=Host(`whoami.${DOMAIN}`)
+      - traefik.http.routers.whoami-rtr.rule=Host(`whoami.${DOMAIN_DEMOS}`)
       - traefik.http.routers.whoami-rtr.service=whoami-svc
       - traefik.http.services.whoami-svc.loadbalancer.server.port=80
 

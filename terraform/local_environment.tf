@@ -2,6 +2,7 @@ module "local_environment" {
   source = "./environments/local"
 
   domain          = var.domain
+  domain_demos    = var.domain_demos
   internal_domain = var.internal_domain
   services        = var.services
   hosts           = var.hosts
@@ -20,7 +21,7 @@ module "cloudflare" {
       name = svc.name
       service = coalesce(
         try(svc.tunnel_service, null),
-        format("https://%s.%s", svc.name, var.domain)
+        format("https://%s.%s", svc.name, var.domain_demos)
       )
     } if svc.public
   ]

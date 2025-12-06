@@ -1,0 +1,24 @@
+services:
+  cutter:
+    image: cutter:latest
+    container_name: cutter
+    restart: unless-stopped
+    networks:
+      - proxy
+    # ports:
+    #   - 8080:8080/tcp # https
+    volumes:
+      - /srv/appdata/cutter/data:/data:rw
+    environment:
+      - TZ=${TZ:-Europe/London}
+      - ROOT_URL=${CUTTER_ROOT_URL}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.cutter-rtr.entrypoints=http
+      - traefik.http.routers.cutter-rtr.rule=Host(`cutter.${DOMAIN_DEMOS}`)
+      - traefik.http.routers.cutter-rtr.service=cutter-svc
+      - traefik.http.services.cutter-svc.loadbalancer.server.port=8080
+
+networks:
+  proxy:
+    external: true

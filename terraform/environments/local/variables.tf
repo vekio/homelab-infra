@@ -3,6 +3,11 @@ variable "domain" {
   description = "Base domain for public-facing services"
 }
 
+variable "domain_demos" {
+  type        = string
+  description = "Domain used for public demo services"
+}
+
 variable "internal_domain" {
   type        = string
   description = "Internal domain used for host records"
