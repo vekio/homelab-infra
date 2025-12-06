@@ -1,0 +1,5 @@
+---
+stacks_root: "{{ playbook_dir }}/../../stacks"
+
+service_compose_root: /srv/services
+service_appdata_root: /srv/appdata
