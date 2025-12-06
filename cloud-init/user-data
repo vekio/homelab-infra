@@ -1,0 +1,16 @@
+# cloud-config (reference: https://cloudinit.readthedocs.io)
+hostname: homelab-node
+manage_etc_hosts: true
+
+users:
+  - name: admin
+    groups: sudo
+    shell: /bin/bash
+    lock_passwd: false
+    passwd: "PASSWORD_HASH" # generate with: mkpasswd --method=SHA-512
+ssh_pwauth: true
+chpasswd:
+  expire: false
+
+ssh:
+  install-server: true

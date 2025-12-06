@@ -1,0 +1,19 @@
+---
+# Hosts/groups targeted by each playbook when no override is provided.
+setup_targets: homelab_hosts
+service_deploy_targets: homelab_hosts
+
+# Sudo
+sudo_username: homelab
+
+# Docker installation
+docker_users:
+  - homelab
+
+# SSH hardening
+ssh_port: 22
+ssh_allowed_users:
+  - homelab
+ssh_allowed_groups:
+  - homelab
+ssh_banner_text: ""

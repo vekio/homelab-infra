@@ -1,0 +1,30 @@
+---
+- name: Deploy catalog service on its assigned host
+  hosts: "{{ service_deploy_targets }}"
+  become: true
+  gather_facts: false
+
+  pre_tasks:
+    - name: Validate required secrets are provided
+      ansible.builtin.include_tasks: "{{ playbook_dir }}/tasks/assert_secrets.yml"
+
+    - name: Ensure service_name is provided
+      ansible.builtin.assert:
+        that:
+          - service_name is defined
+          - service_name | length > 0
+        fail_msg: "Debes definir service_name (ansible-playbook -e service_name=<servicio>)."
+      run_once: true
+
+    - name: Build catalog slice for {{ inventory_hostname }}
+      ansible.builtin.set_fact:
+        _catalog_services: "{{ servers[inventory_hostname] | default({}) }}"
+
+    - name: Skip hosts without the requested service
+      when: service_name not in _catalog_services
+      ansible.builtin.meta: end_host
+
+  roles:
+    - role: service_deploy
+      vars:
+        servers: "{{ { inventory_hostname: _catalog_services } }}"

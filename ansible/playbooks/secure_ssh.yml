@@ -1,0 +1,73 @@
+---
+- name: Apply SSH hardening profile
+  hosts: "{{ setup_targets }}"
+  become: true
+  gather_facts: true
+
+  vars:
+    homelab_templates_dir: "{{ playbook_dir }}/../templates"
+    ssh_port_resolved: "{{ (ssh_port | default(22)) }}"
+    ssh_allowed_users_resolved: "{{ ssh_allowed_users | default([]) }}"
+    ssh_allowed_groups_resolved: "{{ ssh_allowed_groups | default([]) }}"
+    ssh_banner_text_resolved: "{{ ssh_banner_text | default('', true) }}"
+    ssh_banner_template: "{{ homelab_templates_dir }}/homelab_banner.txt.j2"
+    ssh_hardening_template: "{{ homelab_templates_dir }}/ssh_hardening.conf.j2"
+    ssh_banner_path: /etc/ssh/sshd_banner
+    ssh_allow_agent_forwarding_resolved: "{{ ssh_allow_agent_forwarding | default(false) }}"
+    ssh_allow_tcp_forwarding_resolved: "{{ ssh_allow_tcp_forwarding | default(false) }}"
+    ssh_service_name: "{{ 'ssh' if ansible_os_family == 'Debian' else 'sshd' }}"
+
+  tasks:
+    - name: Ensure OpenSSH server is installed
+      ansible.builtin.package:
+        name: openssh-server
+        state: present
+
+    - name: Ensure sshd config directory exists
+      ansible.builtin.file:
+        path: /etc/ssh/sshd_config.d
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Deploy SSH banner content
+      when: ssh_banner_text_resolved | length > 0
+      ansible.builtin.copy:
+        dest: "{{ ssh_banner_path }}"
+        content: "{{ ssh_banner_text_resolved }}"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart SSH
+
+    - name: Deploy default SSH banner template
+      when: ssh_banner_text_resolved | length == 0
+      ansible.builtin.template:
+        src: "{{ ssh_banner_template }}"
+        dest: "{{ ssh_banner_path }}"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart SSH
+
+    - name: Configure SSH hardening snippet
+      ansible.builtin.template:
+        src: "{{ ssh_hardening_template }}"
+        dest: /etc/ssh/sshd_config.d/99-homelab-hardening.conf
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart SSH
+
+    - name: Ensure SSH service is enabled
+      ansible.builtin.service:
+        name: "{{ ssh_service_name }}"
+        enabled: true
+        state: started
+
+  handlers:
+    - name: Restart SSH
+      ansible.builtin.service:
+        name: "{{ ssh_service_name }}"
+        state: restarted

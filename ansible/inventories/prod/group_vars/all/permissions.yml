@@ -1,0 +1,6 @@
+---
+# Default ownership and permissions
+service_directory_owner: root
+service_directory_group: homelab
+service_directory_mode: "0750"
+service_file_mode: "0640"

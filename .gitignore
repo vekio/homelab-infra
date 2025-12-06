@@ -1,0 +1,17 @@
+# Environment
+.direnv/
+.env
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+
+# Docs
+docs/
+
+# Ansible
+.ansible/
+*.retry
+ansible/*.retry

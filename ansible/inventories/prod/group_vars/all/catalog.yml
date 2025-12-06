@@ -1,0 +1,52 @@
+---
+servers:
+  janus:
+    traefik:
+      compose:
+        src: "{{ stacks_root }}/janus/traefik/compose.yml"
+        dest: "{{ service_compose_root }}/traefik/compose.yml"
+      appdata:
+        - src: "{{ stacks_root }}/janus/traefik/config/dynamic/"
+          dest: "{{ service_appdata_root }}/traefik/config/dynamic"
+      extra_directories:
+        - path: "{{ service_appdata_root }}/traefik/certificates"
+        - path: "{{ service_appdata_root }}/traefik/logs"
+      templates:
+        - src: "{{ stacks_root }}/janus/traefik/config/traefik.yml"
+          dest: "{{ service_appdata_root }}/traefik/config/traefik.yml"
+        - src: "{{ stacks_root }}/janus/traefik/config/dynamic/janus.yml"
+          dest: "{{ service_appdata_root }}/traefik/config/dynamic/janus.yml"
+        - src: "{{ stacks_root }}/janus/traefik/config/dynamic/atlas.yml"
+          dest: "{{ service_appdata_root }}/traefik/config/dynamic/atlas.yml"
+
+    adguard:
+      compose:
+        src: "{{ stacks_root }}/janus/adguard/compose.yml"
+        dest: "{{ service_compose_root }}/adguard/compose.yml"
+      appdata: []
+      extra_directories:
+        - path: "{{ service_appdata_root }}/adguard/conf"
+        - path: "{{ service_appdata_root }}/adguard/work"
+
+  atlas:
+    traefik:
+      compose:
+        src: "{{ stacks_root }}/atlas/traefik/compose.yml"
+        dest: "{{ service_compose_root }}/traefik/compose.yml"
+      appdata:
+        - src: "{{ stacks_root }}/atlas/traefik/config/"
+          dest: "{{ service_appdata_root }}/traefik/config"
+      extra_directories:
+        - path: "{{ service_appdata_root }}/traefik/logs"
+
+    whoami:
+      compose:
+        src: "{{ stacks_root }}/atlas/whoami/compose.yml"
+        dest: "{{ service_compose_root }}/whoami/compose.yml"
+
+    cutter:
+      compose:
+        src: "{{ stacks_root }}/atlas/cutter/compose.yml"
+        dest: "{{ service_compose_root }}/cutter/compose.yml"
+      extra_directories:
+        - path: "{{ service_appdata_root }}/cutter/data"
