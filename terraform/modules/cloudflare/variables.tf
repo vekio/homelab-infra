@@ -3,8 +3,14 @@ variable "account_id" {
   type        = string
 }
 
-variable "zone_name" {
-  description = "Human readable zone name (example.com)"
+variable "zone_id" {
+  description = "Cloudflare zone identifier where DNS records are managed"
+  type        = string
+  sensitive   = true
+}
+
+variable "hostname_domain" {
+  description = "Domain suffix used to compose public hostnames (e.g. example.com)"
   type        = string
 }
 

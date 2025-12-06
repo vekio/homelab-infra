@@ -12,9 +12,10 @@ module "local_environment" {
 module "cloudflare" {
   source = "./modules/cloudflare"
 
-  account_id  = var.cloudflare_account_id
-  zone_name   = var.cloudflare_zone_name
-  tunnel_name = var.cloudflare_tunnel_name
+  account_id      = var.cloudflare_account_id
+  zone_id         = var.cloudflare_zone_id
+  tunnel_name     = var.cloudflare_tunnel_name
+  hostname_domain = var.domain_demos
   ingress = [
     for svc in var.services :
     {

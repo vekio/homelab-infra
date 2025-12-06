@@ -43,9 +43,10 @@ variable "cloudflare_api_token" {
   sensitive = true
 }
 
-variable "cloudflare_zone_name" {
+variable "cloudflare_zone_id" {
   type        = string
-  description = "Nombre de la zona de Cloudflare (ej: tudominio.com)"
+  description = "ID de la zona de Cloudflare donde se publican los servicios"
+  sensitive   = true
 }
 
 variable "cloudflare_account_id" {

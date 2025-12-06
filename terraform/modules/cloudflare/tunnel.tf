@@ -22,7 +22,7 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "this" {
       [
         for app in var.ingress :
         {
-          hostname = format("%s.%s", app.name, data.cloudflare_zone.this.name)
+          hostname = format("%s.%s", app.name, var.hostname_domain)
           service  = app.service
         }
       ],
