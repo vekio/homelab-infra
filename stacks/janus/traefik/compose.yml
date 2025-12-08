@@ -24,10 +24,10 @@ services:
       - CF_DNS_API_TOKEN=${TRAEFIK_CF_DNS_API_TOKEN}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.traefik-rtr.entrypoints=https
-      - traefik.http.routers.traefik-rtr.rule=Host(`traefik.${DOMAIN}`)
-      - traefik.http.routers.traefik-rtr.service=api@internal
-      - traefik.http.routers.traefik-rtr.middlewares=authelia@docker
+      - traefik.http.routers.traefik.entrypoints=https
+      - traefik.http.routers.traefik.rule=Host(`janus.${DOMAIN}`)
+      - traefik.http.routers.traefik.service=api@internal
+      - traefik.http.routers.traefik.middlewares=authelia@docker
     security_opt:
       - no-new-privileges:true
 
