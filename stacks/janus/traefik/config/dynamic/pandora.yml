@@ -1,0 +1,32 @@
+http:
+  routers:
+    traefik-pandora:
+      rule: "Host(`pandora.{{ domain }}`)"
+      entryPoints:
+        - https
+      service: app-via-pandora
+    media:
+      rule: "Host(`media.{{ domain }}`)"
+      entryPoints:
+        - https
+      service: app-via-pandora
+
+  services:
+    app-via-pandora:
+      loadBalancer:
+        servers:
+          - url: "http://pandora.home.local:80"
+
+tcp:
+  routers:
+    mantita:
+      entryPoints:
+        - minecraft
+      rule: "HostSNI(`*`)"
+      service: mantita
+
+  services:
+    mantita:
+      loadBalancer:
+        servers:
+          - address: "pandora.home.local:25565"

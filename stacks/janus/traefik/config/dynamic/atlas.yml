@@ -1,10 +1,5 @@
 http:
   routers:
-    whoami:
-      rule: "Host(`whoami.{{ domain_demos }}`)"
-      entryPoints:
-        - https
-      service: app-via-atlas
     traefik-atlas:
       rule: "Host(`atlas.{{ domain }}`)"
       entryPoints:
