@@ -36,8 +36,8 @@ services:
     restart: unless-stopped
     networks:
       - proxy
-    # ports:
-    #   - 3890:3890 # LDAP
+    ports:
+      - 3890:3890 # LDAP
     #   - 17170:17170 # WEB UI
     volumes:
       - /srv/appdata/lldap/data:/data
