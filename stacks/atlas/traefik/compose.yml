@@ -1,7 +1,8 @@
 services:
   traefik:
     image: traefik:latest
-    container_name: traefik-janus
+    container_name: traefik
+    hostname: traefik
     restart: always
     depends_on:
       - socket-proxy
@@ -16,15 +17,14 @@ services:
     volumes:
       # - /var/run/docker.sock:/var/run/docker.sock:ro # better use socket-proxy instead
       - /srv/appdata/traefik/config:/etc/traefik/:ro # put the provided traefik.yml and dynamic folder here
-      - /srv/appdata/traefik/certificates:/letsencrypt:rw
       - /srv/appdata/traefik/logs:/logs:rw
     environment:
       - TZ=${TZ:-Europe/London}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.traefik-rtr.entrypoints=http
-      - traefik.http.routers.traefik-rtr.rule=Host(`atlas.${DOMAIN}`)
-      - traefik.http.routers.traefik-rtr.service=api@internal
+      - traefik.http.routers.traefik.entrypoints=http
+      - traefik.http.routers.traefik.rule=Host(`atlas.${DOMAIN}`)
+      - traefik.http.routers.traefik.service=api@internal
     security_opt:
       - no-new-privileges:true
 
