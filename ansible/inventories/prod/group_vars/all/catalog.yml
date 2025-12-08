@@ -28,6 +28,19 @@ servers:
         - path: "{{ service_appdata_root }}/adguard/conf"
         - path: "{{ service_appdata_root }}/adguard/work"
 
+    auth:
+      compose:
+        src: "{{ stacks_root }}/janus/auth/compose.yml"
+        dest: "{{ service_compose_root }}/auth/compose.yml"
+      appdata: []
+      extra_directories:
+        - path: "{{ service_appdata_root }}/authelia/data"
+        - path: "{{ service_appdata_root }}/authelia/config"
+        - path: "{{ service_appdata_root }}/lldap/data"
+      templates:
+        - src: "{{ stacks_root }}/janus/auth/config/configuration.yml"
+          dest: "{{ service_appdata_root }}/authelia/config/configuration.yml"
+
   atlas:
     traefik:
       compose:
