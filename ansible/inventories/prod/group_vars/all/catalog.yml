@@ -14,8 +14,8 @@ servers:
       templates:
         - src: "{{ stacks_root }}/janus/traefik/config/traefik.yml"
           dest: "{{ service_appdata_root }}/traefik/config/traefik.yml"
-        - src: "{{ stacks_root }}/janus/traefik/config/dynamic/janus.yml"
-          dest: "{{ service_appdata_root }}/traefik/config/dynamic/janus.yml"
+        - src: "{{ stacks_root }}/janus/traefik/config/dynamic/pandora.yml"
+          dest: "{{ service_appdata_root }}/traefik/config/dynamic/pandora.yml"
         - src: "{{ stacks_root }}/janus/traefik/config/dynamic/atlas.yml"
           dest: "{{ service_appdata_root }}/traefik/config/dynamic/atlas.yml"
 
@@ -63,3 +63,24 @@ servers:
         dest: "{{ service_compose_root }}/cutter/compose.yml"
       extra_directories:
         - path: "{{ service_appdata_root }}/cutter/data"
+
+  pandora:
+    traefik:
+      compose:
+        src: "{{ stacks_root }}/pandora/traefik/compose.yml"
+        dest: "{{ pandora_service_compose_root }}/traefik/compose.yml"
+      appdata:
+        - src: "{{ stacks_root }}/pandora/traefik/config/"
+          dest: "{{ pandora_service_appdata_root }}/traefik/config"
+      extra_directories:
+        - path: "{{ pandora_service_appdata_root }}/traefik/logs"
+
+    jellyfin:
+      compose:
+        src: "{{ stacks_root }}/pandora/jellyfin/compose.yml"
+        dest: "{{ pandora_service_compose_root }}/jellyfin/compose.yml"
+      appdata: []
+      extra_directories:
+        - path: "{{ pandora_service_appdata_root }}/jellyfin/config"
+        - path: "{{ pandora_service_appdata_root }}/jellyfin/cache"
+        - path: "{{ pandora_service_appdata_root }}/jellyfin/transcode"
