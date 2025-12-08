@@ -1,7 +1,8 @@
 services:
   traefik:
     image: traefik:latest
-    container_name: traefik-janus
+    container_name: traefik
+    hostname: traefik
     restart: always
     depends_on:
       - socket-proxy
