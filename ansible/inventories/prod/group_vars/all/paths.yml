@@ -3,3 +3,6 @@ stacks_root: "{{ playbook_dir }}/../../stacks"
 
 service_compose_root: /srv/services
 service_appdata_root: /srv/appdata
+
+pandora_service_compose_root: /mnt/user/appdata/compose
+pandora_service_appdata_root: /mnt/user/appdata

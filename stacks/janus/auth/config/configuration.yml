@@ -1,0 +1,56 @@
+server:
+  address: tcp://:9091/
+
+log:
+  level: info
+
+theme: auto
+
+authentication_backend:
+  ldap:
+    implementation: lldap
+    address: ldap://lldap:3890
+    base_dn: "{{ base_dn }}"
+    user: UID=authelia,OU=people,{{ base_dn }}
+    password: "{{ authelia_lldap_password }}"
+
+password_policy:
+  standard:
+    require_uppercase: true
+    require_lowercase: true
+    require_number: true
+    require_special: true
+
+session:
+  # secret: /run/secrets/SESSION_SECRET
+  cookies:
+    - domain: "{{ domain }}"
+      authelia_url: "https://auth.{{ domain }}"
+      # default_redirection_url: "https://status.{{ domain }}"
+
+identity_validation:
+  reset_password:
+    # jwt_secret: /run/secrets/JWT_SECRET
+
+access_control:
+  default_policy: deny
+  rules:
+    - domain: "*.{{ domain }}"
+      policy: one_factor
+      subject:
+        - group:family
+
+storage:
+  # encryption_key: /run/secrets/STORAGE_ENCRYPTION_KEY
+  local:
+    path: /data/db.sqlite3
+
+notifier:
+  disable_startup_check: false
+  smtp:
+    address: "submission://{{ smtp_host }}:{{ smtp_port }}"
+    username: "{{ smtp_user }}"
+    # password: /run/secrets/SMTP_PASSWORD
+    sender: "Homelab <{{ smtp_sender }}>"
+    subject: "[Authelia] - {title}"
+    startup_check_address: "test@{{ domain }}"
