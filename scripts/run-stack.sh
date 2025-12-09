@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
-# CLI interactivo para operar los stacks Docker Compose en stacks/<servidor>/<stack>.
-# Usa gum para elegir servidor, stack y accion; cambia temporalmente al docker context
-# adecuado antes de ejecutar y lo restaura al salir.
-# Variables opcionales:
-#   STACKS_ROOT: ruta alternativa a la carpeta stacks (por defecto, la del repo).
-#   STACK_CONTEXT_<SERVIDOR>: context a usar para un servidor concreto
-#     (ejemplo: STACK_CONTEXT_JANUS=janus-ssh).
+# Interactive CLI to operate Docker Compose stacks at stacks/<server>/<stack>.
+# Uses gum to pick server/stack/action, switches to the matching Docker context
+# while running, then restores the default context.
 
 set -euo pipefail
 
