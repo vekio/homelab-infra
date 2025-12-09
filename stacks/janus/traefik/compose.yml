@@ -35,6 +35,7 @@ services:
   socket-proxy:
     image: lscr.io/linuxserver/socket-proxy:latest
     container_name: socket-proxy
+    hostname: socket-proxy
     restart: always
     networks:
       - docker-proxynet
@@ -52,3 +53,4 @@ networks:
     name: proxy
   docker-proxynet:
     internal: true
+    name: docker-proxynet
