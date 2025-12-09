@@ -2,7 +2,14 @@ services:
   cloudflare-tunnel:
     image: cloudflare/cloudflared:latest
     container_name: cloudflare-tunnel
+    hostname: cloudflare-tunnel
     restart: always
+    networks:
+      - tunnel
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     command: tunnel --no-autoupdate run
+
+networks:
+  tunnel:
+    name: tunnel

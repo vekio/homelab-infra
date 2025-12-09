@@ -27,6 +27,7 @@ servers:
       extra_directories:
         - path: "{{ service_appdata_root }}/adguard/conf"
         - path: "{{ service_appdata_root }}/adguard/work"
+        - path: "{{ service_appdata_root }}/unbound"
 
     auth:
       compose:
