@@ -46,5 +46,11 @@ services:
 networks:
   proxy:
     name: proxy
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
   docker-proxynet:
     internal: true
+    name: docker-proxynet
