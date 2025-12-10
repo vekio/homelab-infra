@@ -23,11 +23,12 @@ servers:
       compose:
         src: "{{ stacks_root }}/janus/adguard/compose.yml"
         dest: "{{ service_compose_root }}/adguard/compose.yml"
-      appdata: []
+      appdata:
+        - src: "{{ stacks_root }}/janus/adguard/config/"
+          dest: "{{ service_appdata_root }}/unbound"
       extra_directories:
         - path: "{{ service_appdata_root }}/adguard/conf"
         - path: "{{ service_appdata_root }}/adguard/work"
-        - path: "{{ service_appdata_root }}/unbound"
 
     auth:
       compose:
