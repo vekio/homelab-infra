@@ -50,7 +50,6 @@ services:
 
 networks:
   dns:
-    internal: true
     name: dns
     ipam:
       driver: default
