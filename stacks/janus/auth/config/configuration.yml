@@ -38,7 +38,7 @@ access_control:
     - domain: "*.{{ domain }}"
       policy: one_factor
       subject:
-        - group:family
+        - group:admins
 
 storage:
   # encryption_key: /run/secrets/STORAGE_ENCRYPTION_KEY

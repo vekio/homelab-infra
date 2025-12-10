@@ -86,3 +86,11 @@ servers:
         - path: "{{ pandora_service_appdata_root }}/jellyfin/config"
         - path: "{{ pandora_service_appdata_root }}/jellyfin/cache"
         - path: "{{ pandora_service_appdata_root }}/jellyfin/transcode"
+
+    torrent:
+      compose:
+        src: "{{ stacks_root }}/pandora/torrent/compose.yml"
+        dest: "{{ pandora_service_compose_root }}/torrent/compose.yml"
+      appdata: []
+      extra_directories:
+        - path: "{{ pandora_service_appdata_root }}/torrent/config"
