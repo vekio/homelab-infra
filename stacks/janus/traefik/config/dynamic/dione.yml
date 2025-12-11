@@ -1,0 +1,20 @@
+http:
+  routers:
+    traefik-dione:
+      rule: "Host(`dione.{{ domain }}`)"
+      entryPoints:
+        - https
+      service: app-via-dione
+      middlewares:
+        - authelia@docker
+    hub:
+      rule: "Host(`hub.{{ domain }}`)"
+      entryPoints:
+        - https
+      service: app-via-dione
+
+  services:
+    app-via-dione:
+      loadBalancer:
+        servers:
+          - url: "http://dione.home.local:80"
