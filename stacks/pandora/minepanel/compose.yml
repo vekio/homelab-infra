@@ -1,0 +1,43 @@
+services:
+  minepanel:
+    image: ketbom/minepanel:latest
+    container_name: minepanel
+    hostname: minepanel
+    restart: unless-stopped
+    networks:
+      - proxy
+    # ports:
+    #   - 8091:8091 # backend
+    #   - 3000:3000 # web ui
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /mnt/user/minecraft/servers:/app/servers
+      - /mnt/user/appdata/minepanel:/app/data
+    environment:
+      - TZ=${TZ}
+      # backend
+      - FRONTEND_URL=https://minepanel.${DOMAIN}
+      - JWT_SECRET=${MINEPANEL_JWT_SECRET} # openssl rand -base64 32
+      - CLIENT_PASSWORD=admin
+      - CLIENT_USERNAME=admin
+      - BASE_DIR=/mnt/user/minecraft
+      # - HOST_LAN_IP=${HOST_LAN_IP} # Optional: Your LAN IP for local network play
+      # frontend
+      - NEXT_PUBLIC_BACKEND_URL=https://minepanel-api.${DOMAIN}
+      - NEXT_PUBLIC_DEFAULT_LANGUAGE=en
+    labels:
+      - traefik.enable=true
+      ## frontend
+      - traefik.http.routers.minepanel.rule=Host(`minepanel.${DOMAIN}`)
+      - traefik.http.routers.minepanel.entrypoints=http
+      - traefik.http.routers.minepanel.service=minepanel-frontend
+      - traefik.http.services.minepanel-frontend.loadbalancer.server.port=3000
+      ## backend
+      - traefik.http.routers.minepanel-api.rule=Host(`minepanel-api.${DOMAIN}`)
+      - traefik.http.routers.minepanel-api.entrypoints=http
+      - traefik.http.routers.minepanel-api.service=minepanel-backend
+      - traefik.http.services.minepanel-backend.loadbalancer.server.port=8091
+
+networks:
+  proxy:
+    external: true
