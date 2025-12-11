@@ -18,6 +18,8 @@ servers:
           dest: "{{ service_appdata_root }}/traefik/config/dynamic/pandora.yml"
         - src: "{{ stacks_root }}/janus/traefik/config/dynamic/atlas.yml"
           dest: "{{ service_appdata_root }}/traefik/config/dynamic/atlas.yml"
+        - src: "{{ stacks_root }}/janus/traefik/config/dynamic/dione.yml"
+          dest: "{{ service_appdata_root }}/traefik/config/dynamic/dione.yml"
 
     adguard:
       compose:
@@ -94,3 +96,22 @@ servers:
       appdata: []
       extra_directories:
         - path: "{{ pandora_service_appdata_root }}/torrent/config"
+
+  dione:
+    traefik:
+      compose:
+        src: "{{ stacks_root }}/dione/traefik/compose.yml"
+        dest: "{{ service_compose_root }}/traefik/compose.yml"
+      appdata:
+        - src: "{{ stacks_root }}/dione/traefik/config/"
+          dest: "{{ service_appdata_root }}/traefik/config"
+      extra_directories:
+        - path: "{{ service_appdata_root }}/traefik/logs"
+
+    glance:
+      compose:
+        src: "{{ stacks_root }}/dione/glance/compose.yml"
+        dest: "{{ service_compose_root }}/glance/compose.yml"
+      templates:
+        - src: "{{ stacks_root }}/dione/glance/config/glance.yml"
+          dest: "{{ service_appdata_root }}/glance/config/glance.yml"
