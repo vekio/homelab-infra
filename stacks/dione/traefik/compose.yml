@@ -48,3 +48,4 @@ networks:
     name: proxy
   docker-proxynet:
     internal: true
+    name: docker-proxynet
