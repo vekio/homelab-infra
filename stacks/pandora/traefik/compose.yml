@@ -19,7 +19,7 @@ services:
       - /mnt/user/appdata/traefik/config:/etc/traefik/:ro # put the provided traefik.yml and dynamic folder here
       - /mnt/user/appdata/traefik/logs:/logs:rw
     environment:
-      - TZ=${TZ:-Europe/London}
+      - TZ=${TZ}
     labels:
       - traefik.enable=true
       - traefik.http.routers.traefik.entrypoints=http

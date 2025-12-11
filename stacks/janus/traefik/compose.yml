@@ -21,7 +21,7 @@ services:
       - /srv/appdata/traefik/certificates:/letsencrypt:rw
       - /srv/appdata/traefik/logs:/logs:rw
     environment:
-      - TZ=${TZ:-Europe/London}
+      - TZ=${TZ}
       - CF_DNS_API_TOKEN=${TRAEFIK_CF_DNS_API_TOKEN}
     labels:
       - traefik.enable=true

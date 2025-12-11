@@ -9,7 +9,7 @@ services:
       - CLOUDFLARE_API_TOKEN=${DDNS_CF_DNS_API_TOKEN}
       - DOMAINS=home.${DOMAIN}
       - PROXIED=false
-      - TZ=${TZ:-Europe/London}
+      - TZ=${TZ}
       - IP6_PROVIDER=none
     security_opt:
       - no-new-privileges:true

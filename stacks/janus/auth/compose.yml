@@ -20,7 +20,7 @@ services:
       - AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET=${AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET}
       - AUTHELIA_STORAGE_ENCRYPTION_KEY=${AUTHELIA_STORAGE_ENCRYPTION_KEY}
       - AUTHELIA_NOTIFIER_SMTP_PASSWORD=${SMTP_TOKEN}
-      - TZ=${TZ:-Europe/London}
+      - TZ=${TZ}
     labels:
       - traefik.enable=true
       - traefik.http.routers.authelia.entrypoints=https
@@ -45,7 +45,7 @@ services:
       - LLDAP_JWT_SECRET=${LLDAP_JWT_SECRET}
       - LLDAP_LDAP_USER_PASS=CHANGEME
       - LLDAP_LDAP_BASE_DN=${BASE_DN}
-      - TZ=${TZ:-Europe/London}
+      - TZ=${TZ}
     labels:
       - traefik.enable=true
       - traefik.http.routers.lldap.entrypoints=https

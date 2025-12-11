@@ -24,7 +24,7 @@ services:
       - /srv/appdata/adguard/work:/opt/adguardhome/work
       - /srv/appdata/adguard/conf:/opt/adguardhome/conf
     environment:
-      - TZ=${TZ:-Europe/London}
+      - TZ=${TZ}
     labels:
       - traefik.enable=true
       - traefik.http.routers.adguard.entrypoints=https
@@ -46,7 +46,7 @@ services:
     volumes:
       - /srv/appdata/unbound:/etc/unbound/custom.conf.d
     environment:
-      - TZ=${TZ:-Europe/London}
+      - TZ=${TZ}
 
 networks:
   dns:
