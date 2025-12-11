@@ -12,6 +12,16 @@ http:
       entryPoints:
         - https
       service: app-via-pandora
+    minepanel:
+      rule: "Host(`minepanel.{{ domain }}`)"
+      entryPoints:
+        - https
+      service: app-via-pandora
+    minepanel-api:
+      rule: "Host(`minepanel-api.{{ domain }}`)"
+      entryPoints:
+        - https
+      service: app-via-pandora
     torrent:
       rule: "Host(`torrent.{{ domain }}`)"
       entryPoints:

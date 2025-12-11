@@ -97,6 +97,14 @@ servers:
       extra_directories:
         - path: "{{ pandora_service_appdata_root }}/qbittorrent/config"
 
+    minepanel:
+      compose:
+        src: "{{ stacks_root }}/pandora/minepanel/compose.yml"
+        dest: "{{ pandora_service_compose_root }}/minepanel/compose.yml"
+      appdata: []
+      extra_directories:
+        - path: "{{ pandora_service_appdata_root }}/minepanel"
+
   dione:
     traefik:
       compose:
