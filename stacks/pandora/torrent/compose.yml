@@ -6,10 +6,10 @@ services:
     restart: unless-stopped
     networks:
       - proxy
-    ports:
-      # - 8080:8080/tcp # ui
-      - 6881:6881/tcp # torrent
-      - 6881:6881/udp # torrent
+    # ports:
+    #   - 8080:8080/tcp # ui
+    #   - 6881:6881/tcp # torrent
+    #   - 6881:6881/udp # torrent
     environment:
       - TZ=${TZ}
       - WEBUI_PORT=8080
