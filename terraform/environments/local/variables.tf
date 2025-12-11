@@ -23,11 +23,10 @@ variable "hosts" {
 
 variable "services" {
   type = list(object({
-    name           = string
-    public         = bool
-    tunnel_service = optional(string)
+    name   = string
+    public = bool
   }))
-  description = "Services that should CNAME to the proxy host and optionally be published via tunnel"
+  description = "Services that should CNAME to the proxy host"
 }
 
 variable "proxy_host" {

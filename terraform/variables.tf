@@ -72,9 +72,8 @@ variable "hosts" {
 variable "services" {
   description = "List of services with visibility flags"
   type = list(object({
-    name           = string
-    public         = bool
-    tunnel_service = optional(string)
+    name   = string
+    public = bool
   }))
 }
 
