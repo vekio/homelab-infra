@@ -20,10 +20,7 @@ module "cloudflare" {
     for svc in var.services :
     {
       name = svc.name
-      service = coalesce(
-        try(svc.tunnel_service, null),
-        format("https://%s.%s", svc.name, var.domain_demos)
-      )
+      service = format("https://%s.%s", svc.name, var.domain_demos)
     } if svc.public
   ]
 }

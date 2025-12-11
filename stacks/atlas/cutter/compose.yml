@@ -10,14 +10,14 @@ services:
     volumes:
       - /srv/appdata/cutter/data:/data:rw
     environment:
-      - TZ=${TZ:-Europe/London}
+      - TZ=${TZ}
       - ROOT_URL=${CUTTER_ROOT_URL}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.cutter-rtr.entrypoints=http
-      - traefik.http.routers.cutter-rtr.rule=Host(`cutter.${DOMAIN_DEMOS}`)
-      - traefik.http.routers.cutter-rtr.service=cutter-svc
-      - traefik.http.services.cutter-svc.loadbalancer.server.port=8080
+      - traefik.http.routers.cutter.entrypoints=http
+      - traefik.http.routers.cutter.rule=Host(`cutter.${DOMAIN_DEMOS}`)
+      - traefik.http.routers.cutter.service=cutter
+      - traefik.http.services.cutter.loadbalancer.server.port=8080
 
 networks:
   proxy:

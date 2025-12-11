@@ -17,7 +17,7 @@ services:
       - JELLYFIN_PublishedServerUrl=https://media.${DOMAIN}
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
-      - TZ=${TZ:-Europe/London}
+      - TZ=${TZ}
     labels:
       - traefik.enable=true
       - traefik.http.routers.jellyfin.entrypoints=http

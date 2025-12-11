@@ -1,0 +1,24 @@
+services:
+  glance:
+    image: glanceapp/glance:latest
+    container_name: glance
+    hostname: glance
+    restart: unless-stopped
+    networks:
+      - proxy
+    # ports:
+    #   - 8080:8080/tcp # web interface
+    volumes:
+      - /srv/appdata/glance/config:/app/config:ro
+    environment:
+      - TZ=${TZ}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.glance.entrypoints=http
+      - traefik.http.routers.glance.rule=Host(`hub.${DOMAIN}`)
+      - traefik.http.routers.glance.service=glance
+      - traefik.http.services.glance.loadbalancer.server.port=8080
+
+networks:
+  proxy:
+    external: true

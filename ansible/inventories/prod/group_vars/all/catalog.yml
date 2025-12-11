@@ -18,12 +18,16 @@ servers:
           dest: "{{ service_appdata_root }}/traefik/config/dynamic/pandora.yml"
         - src: "{{ stacks_root }}/janus/traefik/config/dynamic/atlas.yml"
           dest: "{{ service_appdata_root }}/traefik/config/dynamic/atlas.yml"
+        - src: "{{ stacks_root }}/janus/traefik/config/dynamic/dione.yml"
+          dest: "{{ service_appdata_root }}/traefik/config/dynamic/dione.yml"
 
     adguard:
       compose:
         src: "{{ stacks_root }}/janus/adguard/compose.yml"
         dest: "{{ service_compose_root }}/adguard/compose.yml"
-      appdata: []
+      appdata:
+        - src: "{{ stacks_root }}/janus/adguard/config/"
+          dest: "{{ service_appdata_root }}/unbound"
       extra_directories:
         - path: "{{ service_appdata_root }}/adguard/conf"
         - path: "{{ service_appdata_root }}/adguard/work"
@@ -84,3 +88,38 @@ servers:
         - path: "{{ pandora_service_appdata_root }}/jellyfin/config"
         - path: "{{ pandora_service_appdata_root }}/jellyfin/cache"
         - path: "{{ pandora_service_appdata_root }}/jellyfin/transcode"
+
+    torrent:
+      compose:
+        src: "{{ stacks_root }}/pandora/qbittorrent/compose.yml"
+        dest: "{{ pandora_service_compose_root }}/qbittorrent/compose.yml"
+      appdata: []
+      extra_directories:
+        - path: "{{ pandora_service_appdata_root }}/qbittorrent/config"
+
+    minepanel:
+      compose:
+        src: "{{ stacks_root }}/pandora/minepanel/compose.yml"
+        dest: "{{ pandora_service_compose_root }}/minepanel/compose.yml"
+      appdata: []
+      extra_directories:
+        - path: "{{ pandora_service_appdata_root }}/minepanel"
+
+  dione:
+    traefik:
+      compose:
+        src: "{{ stacks_root }}/dione/traefik/compose.yml"
+        dest: "{{ service_compose_root }}/traefik/compose.yml"
+      appdata:
+        - src: "{{ stacks_root }}/dione/traefik/config/"
+          dest: "{{ service_appdata_root }}/traefik/config"
+      extra_directories:
+        - path: "{{ service_appdata_root }}/traefik/logs"
+
+    glance:
+      compose:
+        src: "{{ stacks_root }}/dione/glance/compose.yml"
+        dest: "{{ service_compose_root }}/glance/compose.yml"
+      templates:
+        - src: "{{ stacks_root }}/dione/glance/config/glance.yml"
+          dest: "{{ service_appdata_root }}/glance/config/glance.yml"

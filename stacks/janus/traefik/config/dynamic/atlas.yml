@@ -5,6 +5,8 @@ http:
       entryPoints:
         - https
       service: app-via-atlas
+      middlewares:
+        - authelia@docker
     cutter:
       rule: "Host(`cutter.{{ domain_demos }}`)"
       entryPoints:
