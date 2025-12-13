@@ -29,6 +29,13 @@ http:
       service: app-via-pandora
       middlewares:
         - authelia@docker
+    unraid:
+      rule: "Host(`unraid.{{ domain }}`)"
+      entryPoints:
+        - https
+      service: app-via-pandora
+      middlewares:
+        - authelia@docker
 
   services:
     app-via-pandora:
