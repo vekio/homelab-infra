@@ -74,10 +74,15 @@ servers:
         src: "{{ stacks_root }}/pandora/traefik/compose.yml"
         dest: "{{ pandora_service_compose_root }}/traefik/compose.yml"
       appdata:
-        - src: "{{ stacks_root }}/pandora/traefik/config/"
-          dest: "{{ pandora_service_appdata_root }}/traefik/config"
+        - src: "{{ stacks_root }}/pandora/traefik/config/dynamic/"
+          dest: "{{ pandora_service_appdata_root }}/traefik/config/dynamic"
       extra_directories:
         - path: "{{ pandora_service_appdata_root }}/traefik/logs"
+      templates:
+        - src: "{{ stacks_root }}/pandora/traefik/config/traefik.yml"
+          dest: "{{ pandora_service_appdata_root }}/traefik/config/traefik.yml"
+        - src: "{{ stacks_root }}/pandora/traefik/config/dynamic/unraid.yml"
+          dest: "{{ pandora_service_appdata_root }}/traefik/config/dynamic/unraid.yml"
 
     jellyfin:
       compose:

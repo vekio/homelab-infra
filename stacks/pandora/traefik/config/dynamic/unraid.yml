@@ -1,0 +1,15 @@
+http:
+  routers:
+    unraid:
+      rule: "Host(`unraid.{{ domain }}`)"
+      entryPoints:
+        - http
+      service: unraid
+      # middlewares:
+      #   - authelia@docker
+
+  services:
+    unraid:
+      loadBalancer:
+        servers:
+          - url: "http://pandora.home.local:5080"

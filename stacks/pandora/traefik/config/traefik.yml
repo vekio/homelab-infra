@@ -38,9 +38,9 @@ providers:
   # Configure provider options to handle dynamic configurations
   providersThrottleDuration: 2s # Prevent excessive reloads by setting a throttle time for provider updates
 
-  # file:
-  #   directory: /etc/traefik/dynamic # Dynamic configuration directory
-  #   watch: true # Automatically reload configuration when files in this directory change
+  file:
+    directory: /etc/traefik/dynamic # Dynamic configuration directory
+    watch: true # Automatically reload configuration when files in this directory change
 
   docker:
     # Enable watching Docker events and auto-discover services
