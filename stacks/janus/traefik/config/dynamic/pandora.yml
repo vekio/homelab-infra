@@ -34,8 +34,11 @@ http:
       entryPoints:
         - https
       service: app-via-pandora
-      middlewares:
-        - authelia@docker
+    chat:
+      rule: "Host(`chat.{{ domain }}`)"
+      entryPoints:
+        - https
+      service: app-via-pandora
 
   services:
     app-via-pandora:
