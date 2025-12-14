@@ -1,0 +1,69 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    hostname: ollama
+    restart: unless-stopped
+    networks:
+      - ollama
+    # ports:
+    #   - 11434:11434/tcp
+    environment:
+      - OLLAMA_KEEP_ALIVE=5m
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - TZ=${TZ}
+    volumes:
+      - /mnt/user/appdata/ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  ollama-ui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: ollama-ui
+    hostname: ollama-ui
+    restart: unless-stopped
+    depends_on:
+      - ollama
+    networks:
+      - proxy
+      - ollama
+    # ports:
+    #   - 8080:8080/tcp # web ui
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - WEBUI_URL=https://chat.${DOMAIN}
+      - TZ=${TZ}
+      - ENABLE_OAUTH_SIGNUP=true
+      - ENABLE_SIGNUP=false
+      - ENABLE_LOGIN_FORM=false
+      - OAUTH_MERGE_ACCOUNTS_BY_EMAIL=true
+      - OAUTH_CLIENT_ID=ollama-ui
+      - OAUTH_CLIENT_SECRET=${OLLAMA_OAUTH_CLIENT_SECRET}
+      - OPENID_PROVIDER_URL=https://auth.${DOMAIN}/.well-known/openid-configuration
+      - OAUTH_PROVIDER_NAME=Authelia
+      - OAUTH_SCOPES=openid email profile groups
+      - ENABLE_OAUTH_ROLE_MANAGEMENT=true
+      - OAUTH_ALLOWED_ROLES=coders,admins
+      - OAUTH_ADMIN_ROLES=admins
+      - OAUTH_ROLES_CLAIM=groups
+      - OAUTH_CODE_CHALLENGE_METHOD=S256
+    volumes:
+      - /mnt/user/appdata/ollama-ui:/app/backend/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ollama-ui.entrypoints=http
+      - traefik.http.routers.ollama-ui.rule=Host(`chat.${DOMAIN}`)
+      - traefik.http.routers.ollama-ui.service=ollama-ui
+      - traefik.http.services.ollama-ui.loadbalancer.server.port=8080
+
+networks:
+  proxy:
+    external: true
+  ollama:
+    name: ollama
