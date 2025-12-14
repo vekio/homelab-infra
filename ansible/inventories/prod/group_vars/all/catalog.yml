@@ -21,17 +21,6 @@ servers:
         - src: "{{ stacks_root }}/janus/traefik/config/dynamic/dione.yml"
           dest: "{{ service_appdata_root }}/traefik/config/dynamic/dione.yml"
 
-    adguard:
-      compose:
-        src: "{{ stacks_root }}/janus/adguard/compose.yml"
-        dest: "{{ service_compose_root }}/adguard/compose.yml"
-      appdata:
-        - src: "{{ stacks_root }}/janus/adguard/config/"
-          dest: "{{ service_appdata_root }}/unbound"
-      extra_directories:
-        - path: "{{ service_appdata_root }}/adguard/conf"
-        - path: "{{ service_appdata_root }}/adguard/work"
-
     auth:
       compose:
         src: "{{ stacks_root }}/janus/auth/compose.yml"
@@ -44,6 +33,17 @@ servers:
       templates:
         - src: "{{ stacks_root }}/janus/auth/config/configuration.yml"
           dest: "{{ service_appdata_root }}/authelia/config/configuration.yml"
+
+    adguard:
+      compose:
+        src: "{{ stacks_root }}/janus/adguard/compose.yml"
+        dest: "{{ service_compose_root }}/adguard/compose.yml"
+      appdata:
+        - src: "{{ stacks_root }}/janus/adguard/config/"
+          dest: "{{ service_appdata_root }}/unbound"
+      extra_directories:
+        - path: "{{ service_appdata_root }}/adguard/conf"
+        - path: "{{ service_appdata_root }}/adguard/work"
 
   atlas:
     traefik:
@@ -137,3 +137,10 @@ servers:
       templates:
         - src: "{{ stacks_root }}/dione/glance/config/glance.yml"
           dest: "{{ service_appdata_root }}/glance/config/glance.yml"
+
+    forgejo:
+      compose:
+        src: "{{ stacks_root }}/dione/forgejo/compose.yml"
+        dest: "{{ service_compose_root }}/forgejo/compose.yml"
+      extra_directories:
+        - path: "{{ service_appdata_root }}/forgejo"
