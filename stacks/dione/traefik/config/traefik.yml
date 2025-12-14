@@ -35,8 +35,8 @@ entryPoints:
     #     - 198.41.128.0/17
     #     # end of Cloudlare public IP list
 
-  # ssh:
-  #   address: :666 # Custom port for SSH entry point (used by some services)
+  ssh-forgejo:
+    address: :2222 # Custom port for SSH entry point (used by some services)
 
 providers:
   # Configure provider options to handle dynamic configurations

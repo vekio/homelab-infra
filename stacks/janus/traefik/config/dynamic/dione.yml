@@ -23,3 +23,16 @@ http:
       loadBalancer:
         servers:
           - url: "http://dione.home.local:80"
+
+tcp:
+  routers:
+    forgejo-ssh:
+      entryPoints: [ssh-forgejo]
+      rule: "HostSNI(`*`)"
+      service: forgejo-ssh
+
+  services:
+    forgejo-ssh:
+      loadBalancer:
+        servers:
+          - address: "dione.home.local:2222"
