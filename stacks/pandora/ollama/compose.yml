@@ -39,6 +39,20 @@ services:
       - OLLAMA_BASE_URL=http://ollama:11434
       - WEBUI_URL=https://chat.${DOMAIN}
       - TZ=${TZ}
+      - ENABLE_OAUTH_SIGNUP=true
+      - ENABLE_SIGNUP=false
+      - ENABLE_LOGIN_FORM=false
+      - OAUTH_MERGE_ACCOUNTS_BY_EMAIL=true
+      - OAUTH_CLIENT_ID=ollama-ui
+      - OAUTH_CLIENT_SECRET=${OLLAMA_OAUTH_CLIENT_SECRET}
+      - OPENID_PROVIDER_URL=https://auth.${DOMAIN}/.well-known/openid-configuration
+      - OAUTH_PROVIDER_NAME=Authelia
+      - OAUTH_SCOPES=openid email profile groups
+      - ENABLE_OAUTH_ROLE_MANAGEMENT=true
+      - OAUTH_ALLOWED_ROLES=coders,admins
+      - OAUTH_ADMIN_ROLES=admins
+      - OAUTH_ROLES_CLAIM=groups
+      - OAUTH_CODE_CHALLENGE_METHOD=S256
     volumes:
       - /mnt/user/appdata/ollama-ui:/app/backend/data
     labels:
