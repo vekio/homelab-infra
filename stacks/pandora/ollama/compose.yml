@@ -5,6 +5,7 @@ services:
     hostname: ollama
     restart: unless-stopped
     networks:
+      - proxy
       - ollama
     # ports:
     #   - 11434:11434/tcp
@@ -15,6 +16,12 @@ services:
       - TZ=${TZ}
     volumes:
       - /mnt/user/appdata/ollama:/root/.ollama
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ollama.entrypoints=http
+      - traefik.http.routers.ollama.rule=Host(`ai.${DOMAIN}`)
+      - traefik.http.routers.ollama.service=ollama
+      - traefik.http.services.ollama.loadbalancer.server.port=11434
     deploy:
       resources:
         reservations:

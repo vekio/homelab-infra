@@ -39,6 +39,11 @@ http:
       entryPoints:
         - https
       service: app-via-pandora
+    ai:
+      rule: "Host(`ai.{{ domain }}`)"
+      entryPoints:
+        - https
+      service: app-via-pandora
 
   services:
     app-via-pandora:
