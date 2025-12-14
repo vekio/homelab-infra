@@ -137,3 +137,10 @@ servers:
       templates:
         - src: "{{ stacks_root }}/dione/glance/config/glance.yml"
           dest: "{{ service_appdata_root }}/glance/config/glance.yml"
+
+    forgejo:
+      compose:
+        src: "{{ stacks_root }}/dione/forgejo/compose.yml"
+        dest: "{{ service_compose_root }}/forgejo/compose.yml"
+      extra_directories:
+        - path: "{{ service_appdata_root }}/forgejo"

@@ -12,6 +12,11 @@ http:
       entryPoints:
         - https
       service: app-via-dione
+    git:
+      rule: "Host(`git.{{ domain }}`)"
+      entryPoints:
+        - https
+      service: app-via-dione
 
   services:
     app-via-dione:
