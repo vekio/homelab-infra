@@ -94,6 +94,19 @@ servers:
         - path: "{{ pandora_service_appdata_root }}/jellyfin/cache"
         - path: "{{ pandora_service_appdata_root }}/jellyfin/transcode"
 
+    immich:
+      compose:
+        src: "{{ stacks_root }}/pandora/immich/compose.yml"
+        dest: "{{ pandora_service_compose_root }}/immich/compose.yml"
+      extra_directories:
+        - path: "{{ pandora_service_appdata_root }}/immich/thumbs"
+        - path: "{{ pandora_service_appdata_root }}/immich/encoded-video"
+        - path: "{{ pandora_service_appdata_root }}/immich/profile"
+        - path: "{{ pandora_service_appdata_root }}/immich/postgres"
+        - path: "{{ pandora_service_gallery_root }}/immich"
+        - path: "{{ pandora_service_gallery_root }}/immich/library"
+        - path: "{{ pandora_service_gallery_root }}/immich/backups"
+
     qbittorrent:
       compose:
         src: "{{ stacks_root }}/pandora/qbittorrent/compose.yml"

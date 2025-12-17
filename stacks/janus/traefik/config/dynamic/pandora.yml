@@ -44,6 +44,11 @@ http:
       entryPoints:
         - https
       service: app-via-pandora
+    photos:
+      rule: "Host(`photos.{{ domain }}`)"
+      entryPoints:
+        - https
+      service: app-via-pandora
 
   services:
     app-via-pandora:
